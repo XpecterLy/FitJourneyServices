@@ -1,0 +1,12 @@
+version: '3'
+
+services:
+  crypto_traking_ms_user_image:
+    container_name: container_ms_user
+    restart: always
+    build: ./MsUser
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./MsUser:/usr/src/app
+      - /usr/src/app/node_modules
