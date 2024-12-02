@@ -1,8 +1,8 @@
 const mongoose = require("mongoose");
 
-const string_connection_bd = "FitJourneyDB";
+const string_connection_bd = "mongodb://localhost:27017/FitJourneyDB";
 
-async function connectToDatabase() {
+export const connectToDatabase = async() => {
   try {
     await mongoose.connect(string_connection_bd);
     console.log("Connection to the database established correctly.");
@@ -11,5 +11,3 @@ async function connectToDatabase() {
     throw new Error("Error to connect the database!");
   }
 }
-
-module.exports = connectToDatabase;

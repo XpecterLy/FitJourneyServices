@@ -1,8 +1,11 @@
-import express, { Request, Response } from 'express';
+import express from 'express';
 import { routesV1 } from './routes/routes';
+import {connectToDatabase} from './config/db'
 
 const app = express();
 app.use(express.json());
+
+connectToDatabase();
 
 routesV1(app);
 

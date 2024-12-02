@@ -1,8 +1,7 @@
 import express from 'express';
+import routerUser from './v1/routesUser';
 
-import routerUser from "./v1/RoutesUser";
-
-const signature = '/v1/gym'
+const signature = '/v1/fitjourney'
 export const routesV1 = (app: express.Application) => {
-    app.use(`${signature}/auth/`, routerUser);
+    app.use(`${signature}/user/`, routerUser);
 };
