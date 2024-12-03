@@ -19,7 +19,7 @@ interface CustomError {
   error: string;
 }
 
-const supportedMethods = ["post", "put", "patch", "delete"];
+const supportedMethods = ["post", "put", "patch", "delete", "get"];
 
 const validationOptions = {
   abortEarly: false,
@@ -27,7 +27,9 @@ const validationOptions = {
   stripUnknown: false,
 };
 
-const schemaValidator = (path: string, useJoiError = true): RequestHandler => {
+type ValidateType = "body" | "query"
+
+const schemaValidator = (path: string, useJoiError = true, validateType: ValidateType = "body"): RequestHandler => {
   const schema = schemas[path];
 
   if (!schema) {
@@ -41,7 +43,7 @@ const schemaValidator = (path: string, useJoiError = true): RequestHandler => {
       return next();
     }
 
-    const { error, value } = schema.validate(req.body, validationOptions);
+    const { error, value } = schema.validate((validateType==='body') ? req.body : req.query, validationOptions);
 
     if (error) {
       const customError: CustomError = {
@@ -65,7 +67,8 @@ const schemaValidator = (path: string, useJoiError = true): RequestHandler => {
     }
 
     // validation successful
-    req.body = value;
+    (validateType === 'body') ? req.body :  req.query = value
+     
     return next();
   };
 };

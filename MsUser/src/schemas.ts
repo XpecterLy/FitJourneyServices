@@ -10,6 +10,11 @@ const userRegister = Joi.object().keys({
     password: Joi.string().pattern(new RegExp(PASSWORD_REGEX)).required(),
 });
 
+const userGet = Joi.object().keys({
+    id: Joi.string().required(),
+});
+
 export default {
   "/user/add": userRegister,
+  "/user/get": userGet,
 } as { [key: string]: ObjectSchema };
