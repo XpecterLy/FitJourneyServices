@@ -25,40 +25,12 @@ export const RegisterUser = async (req: Request<{}, {}, UserDataType>, res: Resp
     const hash = await encryptPassword(data.password);
 
     res.status(201).send( 
-      await RegisterUserService({...data, password: hash, rol: 'user'})
+      await RegisterUserService({...data, password: hash})
     );
   } catch (error) {
     ErrorException(res, error);
   }
 }
-
-export const RegisterAdmin = async (req: Request<{}, {}, UserDataType>, res: Response) => {
-  try {
-    const data = req.body;
-
-    // Validate if exist username
-    const existUserName = await GetUserByUserNameService(data.username);
-    if(!validationObjectIsEmpty(existUserName)){
-      throw {code: 400, message: 'username alredy exist'} as ErrorType;
-    }
-    
-    // Validate if exist email
-    const existEmail = await GetUserByEmailService(data.email);
-    if(!validationObjectIsEmpty(existEmail)){
-      throw {code: 400, message: 'email alredy exist'} as ErrorType;
-    }
-
-    // Hash password
-    const hash = await encryptPassword(data.password);
-
-    res.status(201).send( 
-      await RegisterUserService({...data, password: hash, rol: 'admin'})
-    );
-  } catch (error) {
-    ErrorException(res, error);
-  }
-}
-
 export const GetUserById = async (req: Request<{}, {id: string}, {}>, res: Response) => {
   try {
     const {id} = req.query;
