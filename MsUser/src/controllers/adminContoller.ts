@@ -12,14 +12,10 @@ export const RegisterUser = async (req: Request<{}, {}, UserDataType>, res: Resp
     const data = req.body;
 
     const existUserName = await GetUserByUserNameService(data.username);
-    if(!validationObjectIsEmpty(existUserName)){
-      throw {code: 400, message: 'username alredy exist'} as ErrorType;
-    }
+    if(!validationObjectIsEmpty(existUserName)) throw {code: 400, message: 'username alredy exist'} as ErrorType;
     
     const existEmail = await GetUserByEmailService(data.email);
-    if(!validationObjectIsEmpty(existEmail)){
-      throw {code: 400, message: 'email alredy exist'} as ErrorType;
-    }
+    if(!validationObjectIsEmpty(existEmail)) throw {code: 400, message: 'email alredy exist'} as ErrorType;
 
     // Hash password
     const hash = await encryptPassword(data.password);

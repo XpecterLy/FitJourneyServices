@@ -1,16 +1,19 @@
 import { userModel } from "../schemas/user.schema";
 import { type ErrorType } from "../types/error.type";
 import { UserType, UserDataType } from "../types/user.types";
+import { ErrorException } from "../utils/errorUtil";
 
-export const RegisterUserService = async (user: UserDataType): Promise<UserType> => {
-    const userInstance = new userModel(user);
-    await userInstance.save();
+export const RegisterUserService = async (data: UserDataType): Promise<UserType> => {
+    const userInstance = new userModel(data);
+    const res = await userInstance.save();
+
+    if(!res) throw { code: 400, message: 'error to insert' } as ErrorType;
 
     return {
         id: userInstance._id.toString(),
-        username: user.username,
-        email: user.email,
-        rol: user.rol
+        username: data.username,
+        email: data.email,
+        rol: data.rol
     } as UserType;
 }
 
@@ -50,4 +53,22 @@ export const GetUserByEmailService = async (email: string): Promise<UserDataType
     } as UserDataType;
 } 
 
+export const UpdateUserServie = async (id: string, newData: UserType, oldData: UserDataType): Promise<UserDataType> => {
+    const userUpdate = {
+        ...oldData,
+        username: newData.username != undefined ? newData.username : oldData.username,
+        email: newData.email != undefined ? newData.email : oldData.email,
+    } as UserDataType;
 
+    const res = await userModel.updateOne( {_id: id}, userUpdate );
+    if (res.modifiedCount > 0) {
+       return userUpdate;
+    }else{
+        throw { code: 400, message: 'error to update'} as ErrorType;
+    }
+}
+
+export const DeleteUserService = async (id: string) => {
+    const res = await userModel.deleteOne({_id: id});
+    if(res.deletedCount <= 0 ) throw { code: 400, message: 'error to delete' } as ErrorType;
+}

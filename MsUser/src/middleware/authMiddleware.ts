@@ -1,6 +1,8 @@
 import {  Request, Response, NextFunction } from 'express';
 import { GetUserByIdService } from '../services/user.service';
 import { ErrorException } from '../utils/errorUtil';
+import { ErrorType } from '../types/error.type';
+import mongoose from 'mongoose';
 const jwt = require('jsonwebtoken');
 
 // Add userId to request express
@@ -40,6 +42,7 @@ export function verifyToken(req: Request, res: Response, next: NextFunction): vo
         try {
             const secretKey = process.env.SECRET_KEY
             const decoded = jwt.verify(token, secretKey);
+            if (!mongoose.isValidObjectId(decoded.id)) throw { code: 400, message: 'user is not valid' } as ErrorType;
             req.userId = decoded.id;
             next();
         } catch (error) {
@@ -48,7 +51,9 @@ export function verifyToken(req: Request, res: Response, next: NextFunction): vo
 };
 
 // Validate user rol
-export const checkRolAuth = (roles: ['admin' | 'user'] ) => async (req: Request, res: Response, next: NextFunction) => {
+type rolType = 'admin' | 'user';
+
+export const checkRolAuth = (roles: rolType[] ) => async (req: Request, res: Response, next: NextFunction) => {
     try {
         const secretKey = process.env.SECRET_KEY;
         const token = req.header('Authorization');
