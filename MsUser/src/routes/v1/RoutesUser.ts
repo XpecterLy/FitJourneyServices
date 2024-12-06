@@ -34,6 +34,7 @@ routerUser.delete('/',
     checkAuth,
     verifyToken,
     checkRolAuth(['admin', 'user']), 
+    schemaValidator("/admin/get"), 
     DeleteUser,
 );
 

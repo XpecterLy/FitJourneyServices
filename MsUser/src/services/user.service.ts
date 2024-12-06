@@ -1,7 +1,22 @@
 import { userModel } from "../schemas/user.schema";
 import { type ErrorType } from "../types/error.type";
 import { UserType, UserDataType } from "../types/user.types";
-import { ErrorException } from "../utils/errorUtil";
+
+export const GetAllUsersService = async (rol?: string, limit?: number) => {
+    var filter = {};
+
+    filter = rol ? {...filter, rol: rol} : filter;
+
+    const usersList = await userModel.find(filter).limit(limit || 10);
+    const user: UserDataType[] = usersList.map((item) => ({
+        id: item.id,
+        username: item.username,
+        email: item.email,
+        rol: item.rol,
+        password: item.password
+    } as UserDataType));
+    return user;
+} 
 
 export const RegisterUserService = async (data: UserDataType): Promise<UserType> => {
     const userInstance = new userModel(data);
@@ -70,5 +85,5 @@ export const UpdateUserServie = async (id: string, newData: UserType, oldData: U
 
 export const DeleteUserService = async (id: string) => {
     const res = await userModel.deleteOne({_id: id});
-    if(res.deletedCount <= 0 ) throw { code: 400, message: 'error to delete' } as ErrorType;
+    if(res.deletedCount <= 0 ) throw { code: 404, message: 'user not found' } as ErrorType;
 }

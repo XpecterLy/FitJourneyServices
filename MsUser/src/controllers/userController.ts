@@ -22,7 +22,6 @@ export const GetUser = async (req: Request, res: Response) => {
     }
 }
 
-
 export const RegisterUser = async (req: Request<{}, {}, UserDataType>, res: Response) => {
     try {
       const data = req.body;
