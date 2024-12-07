@@ -7,16 +7,12 @@ import mongoose from 'mongoose';
 import { ErrorException } from '../utils/errorUtil';
 import { validationObjectIsEmpty } from '../utils/validationUtil';
 
-export const GetAllUsers = async (req: Request<{}, {rol: string, limit?: number }, {}>, res: Response) => {
+export const GetAllUsers = async (req: Request<{}, {}, {}, {rol?: string, limit?: number }>, res: Response) => {
   try {
       const {rol, limit} = req.query;
 
       const rolVal = typeof(rol) == 'string' ? rol : undefined;
       const limitVal = typeof(limit) == 'number' ? Number(limit) : undefined;
-      console.log("limit");
-      console.log(limit);
-      
-
       const userList = await GetAllUsersService(rolVal, limitVal);
       res.status(200).send(userList);
   } catch (error) {
@@ -45,7 +41,7 @@ export const RegisterUser = async (req: Request<{}, {}, UserDataType>, res: Resp
   }
 }
 
-export const GetUserById = async (req: Request<{}, {id: string}, {}>, res: Response) => {
+export const GetUserById = async (req: Request<{}, {}, {}, {id: string}>, res: Response) => {
   try {
     const {id} = req.query;
     if (typeof id === "string" && mongoose.isValidObjectId(id)) {
@@ -64,7 +60,7 @@ export const GetUserById = async (req: Request<{}, {id: string}, {}>, res: Respo
   }
 }
 
-export const UpdateUser = async ( req: Request<{}, {id: string}, UserType>, res: Response ) => {
+export const UpdateUser = async ( req: Request<{}, {}, UserType, {id: string}>, res: Response ) => {
   try {
     
       const {id} = req.query;
@@ -88,7 +84,7 @@ export const UpdateUser = async ( req: Request<{}, {id: string}, UserType>, res:
   }
 }
 
-export const DeleteUser = async ( req: Request<{}, {id: string}, {}>, res: Response ) => {
+export const DeleteUser = async ( req: Request<{}, {}, {}, {id: string}>, res: Response ) => {
   try {
     const {id} = req.query;
     if (typeof id === "string" && mongoose.isValidObjectId(id)) {

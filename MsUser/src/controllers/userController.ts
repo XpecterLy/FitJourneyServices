@@ -22,7 +22,7 @@ export const GetUser = async (req: Request, res: Response) => {
     }
 }
 
-export const RegisterUser = async (req: Request<{}, {}, UserDataType>, res: Response) => {
+export const RegisterUser = async (req: Request<{}, {}, UserDataType, {}>, res: Response) => {
     try {
       const data = req.body;
   
@@ -43,7 +43,7 @@ export const RegisterUser = async (req: Request<{}, {}, UserDataType>, res: Resp
     }
   }
 
-export const UpdateUser = async ( req: Request<{}, {}, UserType>, res: Response ) => {
+export const UpdateUser = async ( req: Request<{}, {}, UserType, {}>, res: Response ) => {
     try {
         const id = req.userId || '';
         const data = req.body;
