@@ -5,9 +5,11 @@ import { CategoriesTrainingStylesType } from '../types/categoriesTrainingStyle.t
 import { validationObjectIsEmpty } from '../utils/validationUtil';
 import { ErrorType } from '../types/error.type';
 
-export const GetAllCategoriesTrainingStyles = async(req: Request, res: Response) => {
+export const GetAllCategoriesTrainingStyles = async(req: Request<{}, {}, {}, {limit?: string}>, res: Response) => {
     try {
-        res.status(200).send(await GetAllCategoriesTrainingStylesService());
+        const {limit} = req.query;
+        const pageLimit = limit != undefined ? Number(limit) : undefined;
+        res.status(200).send(await GetAllCategoriesTrainingStylesService(pageLimit));
     } catch (error) {
         ErrorException(res, error);
     }

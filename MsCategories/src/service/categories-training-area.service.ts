@@ -1,9 +1,21 @@
+import { string } from "joi";
 import { categoriesTrainingAreasModel } from "../schemas/CategoriesTrainingAreas.schema";
 import { CategoriesTrainingAreaType } from "../types/categoriesTrainingAreas.types";
 import { ErrorType } from "../types/error.type";
 
-export const GetAllCategoriesTrainingAreasService = async(): Promise<CategoriesTrainingAreaType[]> => {
-    const res = await categoriesTrainingAreasModel.find();
+export const GetAllCategoriesTrainingAreasService = async(trainingStylesId?: string, limit?: number): Promise<CategoriesTrainingAreaType[]> => {
+    var filter = {};
+
+    trainingStylesId != undefined ? 
+        filter = 
+        {
+            ...filter,
+            trainingStylesId: trainingStylesId
+        } : 
+        filter;
+
+    const res = await categoriesTrainingAreasModel.find(filter).limit(limit || 10);
+
     const resList: CategoriesTrainingAreaType[] =  res.map((item) => ({
         id: item.id,
         trainingStylesId: item.trainingStylesId || '',
@@ -24,8 +36,14 @@ export const GetCategoriesTrainingAreasByIdService = async(id: string) => {
     } as CategoriesTrainingAreaType;
 }
 
-export const GetCategoriesTrainingAreasByNameService = async(name: string) => {
-    const res = await categoriesTrainingAreasModel.findOne({name: name});
+export const GetCategoriesTrainingAreasByNameService = async(name: string, trainingStylesId?: string) => {
+    var filter = {};
+    trainingStylesId ? filter = {
+        ...filter,
+        trainingStylesId: trainingStylesId
+    } : filter;
+
+    const res = await categoriesTrainingAreasModel.findOne({...filter, name: name});
     if ( res === null )  return {} as CategoriesTrainingAreaType;
     return {
         id: res.id,

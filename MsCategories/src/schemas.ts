@@ -22,12 +22,22 @@ const CategoriesTrainingAreaSchemaDataUpdate = Joi.object().keys({
     details: Joi.string().min(0).max(200).optional(),
 });
 
-
 const CategoriesTrainingSchemaId = Joi.object().keys({
   id: Joi.string().min(24).max(24).required(),
 });
 
+const CategoriesTrainingAreaFilter= Joi.object().keys({
+  trainingStylesId: Joi.string().min(24).max(24).optional(),
+  limit: Joi.number().min(1).max(50).optional(),
+});
+
+const CategoriesTrainingLimitSchema = Joi.object().keys({
+  limit: Joi.number().min(1).max(50).optional(),
+});
+
 export default {
+  "/categoriestrainingArea/filter": CategoriesTrainingAreaFilter,
+  "/categoriestraining/filter/limit": CategoriesTrainingLimitSchema,
   "/categoriestraining/data": CategoriesTrainingSchemaData,
   "/categoriestraining/data/update": CategoriesTrainingSchemaDataUpdate,
   "/categoriestrainingArea/data": CategoriesTrainingAreaSchemaData,

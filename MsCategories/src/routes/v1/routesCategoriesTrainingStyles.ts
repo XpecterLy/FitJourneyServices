@@ -10,6 +10,7 @@ routesCategoriesTrainingStyles.get(
     checkAuth,
     verifyToken,
     checkRolAuth(['admin']),
+    schemaValidator("/categoriestraining/filter/limit", true, 'query'), 
     GetAllCategoriesTrainingStyles
 );
 

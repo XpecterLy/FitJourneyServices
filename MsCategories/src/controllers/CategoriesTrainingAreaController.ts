@@ -6,9 +6,12 @@ import { DeleteCategoriesTrainingAreasService, GetAllCategoriesTrainingAreasServ
 import { CategoriesTrainingAreaType } from '../types/categoriesTrainingAreas.types';
 import { GetCategoriesTrainingStylesByIdService } from '../service/categories-training-style.service';
 
-export const GetAllCategoriesTrainingAreas = async(req: Request, res: Response) => {
+export const GetAllCategoriesTrainingAreas = async(req: Request<{}, {}, {}, {trainingStylesId: string, limit: string}>, res: Response) => {
     try {
-        res.status(200).send(await GetAllCategoriesTrainingAreasService());
+        const {trainingStylesId, limit} = req.query;
+        const pageLimit = limit != undefined ? Number(limit) : undefined;
+
+        res.status(200).send(await GetAllCategoriesTrainingAreasService(trainingStylesId, pageLimit));
     } catch (error) {
         ErrorException(res, error);
     }
@@ -32,8 +35,8 @@ export const InsertCategoriesTrainingAreas = async(req: Request<{}, {}, Categori
         
         if(validationObjectIsEmpty(existId)) throw {code: 400, message: 'category training style id is not found'} as ErrorType;
 
-        const existName = await GetCategoriesTrainingAreasByNameService(data.name);
-        if(!validationObjectIsEmpty(existName)) throw {code: 400, message: 'category alredy exist'} as ErrorType;
+        const existName = await GetCategoriesTrainingAreasByNameService(data.name, data.trainingStylesId);
+        if(!validationObjectIsEmpty(existName) && existName.trainingStylesId == data.trainingStylesId) throw {code: 400, message: 'category alredy exist'} as ErrorType;
 
         res.status(201).send(await InsertCategoriesTrainingAreasService(data));
     } catch (error) {
@@ -55,6 +58,7 @@ export const UpdateCategoriesTrainingAreas = async(req: Request<{}, {}, Categori
 
         if(newData.name != undefined){
             const existName = await GetCategoriesTrainingAreasByNameService(newData.name);
+            
             if(!validationObjectIsEmpty(existName)) throw {code: 400, message: 'category name alredy exist'} as ErrorType;
         }
 

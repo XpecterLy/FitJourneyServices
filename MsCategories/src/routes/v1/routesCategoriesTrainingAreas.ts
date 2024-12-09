@@ -10,6 +10,7 @@ routersCategoriesTrainingAreas.get(
     checkAuth,
     verifyToken,
     checkRolAuth(['admin']),
+    schemaValidator("/categoriestrainingArea/filter", true, 'query'), 
     GetAllCategoriesTrainingAreas
 );
 
