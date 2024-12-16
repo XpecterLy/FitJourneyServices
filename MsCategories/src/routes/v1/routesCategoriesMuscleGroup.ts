@@ -1,54 +1,54 @@
 import { Router } from 'express';
 import { checkAuth, checkRolAuth, verifyToken } from '../../middleware/authMiddleware';
-import { DeleteCategoriesTrainingAreas, GetAllCategoriesTrainingAreas, GetCategoriesTrainingAreas, InsertCategoriesTrainingAreas, UpdateCategoriesTrainingAreas } from '../../controllers/CategoriesTrainingAreaController';
+import { DeleteCategoriesMuscleGroup, GetAllCategoriesMuscleGroup, GetCategoriesMuscleGroup, InsertCategoriesMuscleGroup, UpdateCategoriesMuscleGroup } from '../../controllers/CategoriesMuscleGroupController';
 import schemaValidator from '../../middleware/schemaValidator';
 
-const routersCategoriesTrainingAreas = Router();
+const routersCategoriesMuscleGroup = Router();
 
-routersCategoriesTrainingAreas.get(
+routersCategoriesMuscleGroup.get(
     '/all',
     checkAuth,
     verifyToken,
     checkRolAuth(['admin']),
     schemaValidator("/categoriestrainingArea/filter", true, 'query'), 
-    GetAllCategoriesTrainingAreas
+    GetAllCategoriesMuscleGroup
 );
 
-routersCategoriesTrainingAreas.get(
+routersCategoriesMuscleGroup.get(
     '/',
     checkAuth,
     verifyToken,
     checkRolAuth(['admin']),
     schemaValidator("/CategoriesTraining/id", true, 'query'), 
-    GetCategoriesTrainingAreas
+    GetCategoriesMuscleGroup
 );
 
-routersCategoriesTrainingAreas.post(
+routersCategoriesMuscleGroup.post(
     '/',
     checkAuth,
     verifyToken,
     checkRolAuth(['admin']),
     schemaValidator("/categoriestrainingArea/data"), 
-    InsertCategoriesTrainingAreas
+    InsertCategoriesMuscleGroup
 );
 
-routersCategoriesTrainingAreas.put(
+routersCategoriesMuscleGroup.put(
     '/',
     checkAuth,
     verifyToken,
     checkRolAuth(['admin']),
     schemaValidator("/CategoriesTraining/id", true, 'query'), 
     schemaValidator("/categoriestrainingArea/data/update"), 
-    UpdateCategoriesTrainingAreas
+    UpdateCategoriesMuscleGroup
 );
 
-routersCategoriesTrainingAreas.delete(
+routersCategoriesMuscleGroup.delete(
     '/',
     checkAuth,
     verifyToken,
     checkRolAuth(['admin']),
     schemaValidator("/CategoriesTraining/id", true, 'query'), 
-    DeleteCategoriesTrainingAreas
+    DeleteCategoriesMuscleGroup
 );
 
-export default routersCategoriesTrainingAreas;
+export default routersCategoriesMuscleGroup;

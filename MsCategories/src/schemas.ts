@@ -11,13 +11,11 @@ const CategoriesTrainingSchemaDataUpdate = Joi.object().keys({
 });
 
 const CategoriesTrainingAreaSchemaData = Joi.object().keys({
-    trainingStylesId: Joi.string().min(24).max(24).required(),
     name: Joi.string().min(3).max(50).required(),
     details: Joi.string().min(0).max(200).optional(),
 });
 
 const CategoriesTrainingAreaSchemaDataUpdate = Joi.object().keys({
-    trainingStylesId: Joi.string().min(24).max(24).optional(),
     name: Joi.string().min(3).max(50).optional(),
     details: Joi.string().min(0).max(200).optional(),
 });
