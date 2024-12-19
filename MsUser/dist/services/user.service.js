@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.DeleteUserService = exports.UpdateUserServie = exports.GetUserByEmailService = exports.GetUserByUserNameService = exports.GetUserByIdService = exports.RegisterUserService = exports.GetAllUsersService = void 0;
+exports.NotExistRootUserValidation = exports.DeleteUserService = exports.UpdateUserServie = exports.GetUserByEmailService = exports.GetUserByUserNameService = exports.GetUserByIdService = exports.RegisterUserService = exports.GetAllUsersService = void 0;
 const user_schema_1 = require("../schemas/user.schema");
 const GetAllUsersService = (rol, limit) => __awaiter(void 0, void 0, void 0, function* () {
     var filter = {};
@@ -94,3 +94,17 @@ const DeleteUserService = (id) => __awaiter(void 0, void 0, void 0, function* ()
         throw { code: 404, message: 'user not found' };
 });
 exports.DeleteUserService = DeleteUserService;
+const NotExistRootUserValidation = () => __awaiter(void 0, void 0, void 0, function* () {
+    const exist = yield (0, exports.GetAllUsersService)('admin');
+    const data = {
+        username: 'user_root',
+        email: 'root@gmail.com',
+        rol: 'admin',
+        password: '@Root123'
+    };
+    if (exist.length <= 0) {
+        yield (0, exports.RegisterUserService)(data);
+        console.log('add admin user');
+    }
+});
+exports.NotExistRootUserValidation = NotExistRootUserValidation;

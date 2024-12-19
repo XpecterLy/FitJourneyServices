@@ -87,3 +87,18 @@ export const DeleteUserService = async (id: string) => {
     const res = await userModel.deleteOne({_id: id});
     if(res.deletedCount <= 0 ) throw { code: 404, message: 'user not found' } as ErrorType;
 }
+
+export const NotExistRootUserValidation = async () => {
+    const exist = await GetAllUsersService('admin');
+    const data = {
+        username: 'user_root',
+        email: 'root@gmail.com',
+        rol: 'admin',
+        password: '@Root123'
+       } as UserDataType;
+
+    if (exist.length <= 0){
+        await RegisterUserService(data);
+        console.log('add admin user');
+    }
+}
