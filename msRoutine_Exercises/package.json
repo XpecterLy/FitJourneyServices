@@ -1,12 +1,12 @@
 {
-  "name": "msroutine",
+  "name": "msroutine_exercises",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node ./dist/app.js",
-    "build": "tsc",
-    "dev": "ts-node-dev --respawn --transpile-only ./src/app.ts"
+    "start": "node dist/app.js",
+    "dev": "ts-node-dev --respawn --transpile-only src/app.ts",
+    "build": "tsc"
   },
   "keywords": [],
   "author": "",
@@ -23,6 +23,6 @@
     "express": "^4.21.2",
     "joi": "^17.13.3",
     "jsonwebtoken": "^9.0.2",
-    "mongoose": "^8.9.0"
+    "mongoose": "^8.9.1"
   }
 }
