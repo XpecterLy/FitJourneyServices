@@ -1,12 +1,68 @@
-version: '3'
+version: '3.8'
 
 services:
-  crypto_traking_ms_user_image:
-    container_name: container_ms_user
-    restart: always
-    build: ./MsUser
+  fit_journey_ms_auth:
+    build: ./msAuth
     ports:
       - "3000:3000"
+    depends_on:
+      - fit_journey_db
+    restart: always
+
+
+  fit_journey_ms_user:
+    build: ./msUser
+    ports:
+      - "3001:3001"
+    depends_on:
+      - fit_journey_db
+    restart: always
+    
+
+  fit_journey_ms_categories:
+    build: ./msCategories
+    ports:
+      - "3002:3002"
+    depends_on:
+      - fit_journey_db
+    restart: always
+    
+
+  fit_journey_ms_exercise:
+    build: ./msExercise
+    ports:
+      - "3003:3003"
+    depends_on:
+      - fit_journey_db
+    restart: always
+    
+
+  fit_journey_ms_routine:
+    build: ./msRoutine
+    ports:
+      - "3004:3004"
+    depends_on:
+      - fit_journey_db
+    restart: always
+    
+
+  fit_journey_ms_routine_exercises:
+    build: ./msRoutine_Exercises
+    ports:
+      - "3005:3005"
+    depends_on:
+      - fit_journey_db
+    restart: always
+
+
+  fit_journey_db:
+    image: mongo
+    ports:
+      - "27017:27017"
     volumes:
-      - ./MsUser:/usr/src/app
-      - /usr/src/app/node_modules
+      - mongo_data:/data/db
+    logging:
+      driver: none
+
+volumes:
+  mongo_data:

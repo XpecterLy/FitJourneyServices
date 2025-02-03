@@ -1,6 +1,7 @@
 import { userModel } from "../schemas/user.schema";
 import { type ErrorType } from "../types/error.type";
 import { UserType, UserDataType } from "../types/user.types";
+import { encryptPassword } from "../utils/passwordUtil";
 
 export const GetAllUsersService = async (rol?: string, limit?: number) => {
     var filter = {};
@@ -89,16 +90,21 @@ export const DeleteUserService = async (id: string) => {
 }
 
 export const NotExistRootUserValidation = async () => {
-    const exist = await GetAllUsersService('admin');
-    const data = {
-        username: 'user_root',
-        email: 'root@gmail.com',
-        rol: 'admin',
-        password: '@Root123'
-       } as UserDataType;
+    const existRoot = await GetAllUsersService('admin');
+        console.log(`count root: ${existRoot}`);
+        
+        const hash = await encryptPassword('@Root123');
 
-    if (exist.length <= 0){
-        await RegisterUserService(data);
-        console.log('add admin user');
-    }
+        if (existRoot.length <= 0){
+            const data = {
+                username: 'user_root',
+                email: 'root@gmail.com',
+                rol: 'admin',
+                password: hash
+            } as UserDataType;    
+            await RegisterUserService(data);
+            console.log('add admin');
+        }else{
+            console.log('admin exist');
+        }
 }

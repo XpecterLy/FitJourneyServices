@@ -14,8 +14,9 @@ connectToDatabase();
 
 routesV1(app);
 
+NotExistRootUserValidation();
+
 const port = process.env.PORT || 3001;
 app.listen(port || 3001, () => {
-  async () => await NotExistRootUserValidation();
   console.log(`Server is running on http://localhost:${port}`);
 });

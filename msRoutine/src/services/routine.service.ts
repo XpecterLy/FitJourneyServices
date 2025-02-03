@@ -7,21 +7,50 @@ export const getAllRoutineService = async (userId: string, limit?: number): Prom
     return res.map(item => ({
         id: item.id,
         name: item.name,
+        exercises: item.exercises,
         dateCreate: item.dateCreate
     } as ResRoutineType));
 }
 
-export const getRoutineServiceById = async (id: string): Promise<ResRoutineType> => {
+export const getRoutineByIdService = async (id: string): Promise<ResRoutineType> => {
     const res = await routineModel.findById(id);
     if(res == null ) throw { code: 404, message: 'routine not found' } as ErrorType;
     return {
         id: res.id,
         name: res.name,
+        exercises: res.exercises,
         dateCreate: res.dateCreate
     } as ResRoutineType;
 }
 
-export const getRoutineServiceByName = async (name: string, userId?: string): Promise<ResRoutineType> => {
+export const getRoutineByIdAndByExerciseIdService = async (id: string, exercises: string): Promise<ResRoutineType | null> => {
+    const res = await routineModel.findOne({_id: id, exercises: exercises});
+    console.log(res);
+    if(res == null ) return null;
+    return {
+        id: res.id,
+        name: res.name,
+        exercises: res.exercises,
+        dateCreate: res.dateCreate
+    } as ResRoutineType;
+}
+
+export const deleteExercisesFromRoutineByIdService = async (id: string, oldData: ResRoutineType, exercises: string[]): Promise<ResRoutineType | null> => {
+
+    oldData.exercises = oldData.exercises.filter(item => !exercises.includes(item));
+
+    const res = await routineModel.updateOne({_id: id}, oldData);
+    console.log(res);
+    if(res == null ) return null;
+    return {
+        id: oldData.id,
+        name: oldData.name,
+        exercises: oldData.exercises,
+        dateCreate: oldData.dateCreate
+    } as ResRoutineType;
+}
+
+export const getRoutineByNameService = async (name: string, userId?: string): Promise<ResRoutineType> => {
     var filter = {};
     filter = (userId != undefined) ?
          {
@@ -37,6 +66,7 @@ export const getRoutineServiceByName = async (name: string, userId?: string): Pr
     return {
         id: res.id,
         name: res.name,
+        exercises: res.exercises,
         dateCreate: res.dateCreate
     } as ResRoutineType;
 }
@@ -48,13 +78,15 @@ export const insertRoutineService = async (data: RoutineType): Promise<ResRoutin
     return {
         id: res.id,
         name: data.name,
+        exercises: data.exercises,
         dateCreate: data.dateCreate
     } as ResRoutineType;
 }
 
-export const updateRoutineService = async (id: string, oldData: ResRoutineType, newData: RoutineType): Promise<ResRoutineType> => {
+export const updateRoutineService= async (id: string, oldData: ResRoutineType, newData: RoutineType): Promise<ResRoutineType> => {
     const data = {
         name: newData.name != undefined ? newData.name : oldData.name,
+        exercises: newData.exercises != undefined ? newData.exercises : oldData.exercises,
     } as ResRoutineType;
 
     await routineModel.updateOne({_id: id}, data);
@@ -62,7 +94,22 @@ export const updateRoutineService = async (id: string, oldData: ResRoutineType, 
     return {
         id: id,
         name: data.name,
+        exercises: data.exercises,
         dateCreate: data.dateCreate
+    } as ResRoutineType;
+}
+
+export const addExerciseToRoutineService = async (id: string, oldData: ResRoutineType, newExercises: string[]): Promise<ResRoutineType> => {
+
+    newExercises.map(item => (oldData.exercises.push(item)));
+
+    await routineModel.updateOne({_id: id}, { exercises: oldData.exercises });
+
+    return {
+        id: id,
+        name: oldData.name,
+        exercises: oldData.exercises,
+        dateCreate: oldData.dateCreate
     } as ResRoutineType;
 }
 

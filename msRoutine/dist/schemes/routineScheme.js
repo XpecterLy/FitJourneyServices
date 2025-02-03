@@ -5,6 +5,7 @@ const mongoose_1 = require("mongoose");
 const routineSchema = new mongoose_1.Schema({
     userId: { type: String, require },
     name: { type: String, require },
+    exercises: [{ type: String }],
     dateCreate: { type: String, require }
 });
 exports.routineModel = (0, mongoose_1.model)('routine', routineSchema);

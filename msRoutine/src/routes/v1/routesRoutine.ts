@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { deleteRoutine, getAllRoutine, getRoutine, insertRoutine, updateRoutine } from '../../controllers/routineController';
+import { addExerciseToRoutine, deleteExercisesFromRoutineById, deleteRoutine, getAllRoutine, getRoutine, insertRoutine, updateRoutine } from '../../controllers/routineController';
 import { checkAuth, checkRolAuth, verifyToken } from '../../middleware/authMiddleware';
 import schemaValidator from '../../middleware/schemaValidator';
 
@@ -32,11 +32,31 @@ routeRoutine.post(
     insertRoutine
 );
 
+routeRoutine.patch(
+    '/add_exercise_routine',
+    checkAuth,
+    verifyToken,
+    checkRolAuth(['admin', 'user']),
+    schemaValidator('/routine/id', true, 'query'),
+    schemaValidator('/routine/addExerciseToRoutine'),
+    addExerciseToRoutine
+);
+
+routeRoutine.delete(
+    '/delete_exercise_routine',
+    checkAuth,
+    verifyToken,
+    checkRolAuth(['admin', 'user']),
+    schemaValidator('/routine/id', true, 'query'),
+    schemaValidator('/routine/deleteExerciseToRoutine'),
+    deleteExercisesFromRoutineById
+);
+
 routeRoutine.put(
     '/',
     checkAuth,
     verifyToken,
-    checkRolAuth(['admin']),
+    checkRolAuth(['admin', 'user']),
     schemaValidator('/routine/id', true, 'query'),
     schemaValidator('/routine/update'),
     updateRoutine
@@ -46,7 +66,7 @@ routeRoutine.delete(
     '/',
     checkAuth,
     verifyToken,
-    checkRolAuth(['admin']),
+    checkRolAuth(['admin', 'user']),
     schemaValidator('/routine/id', true, 'query'),
     deleteRoutine
 );

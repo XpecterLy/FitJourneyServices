@@ -13,6 +13,7 @@ exports.deleteRoutine = exports.updateRoutine = exports.insertRoutine = exports.
 const errorUtil_1 = require("../utils/errorUtil");
 const routine_service_1 = require("../services/routine.service");
 const validationUtil_1 = require("../utils/validationUtil");
+const msExercise_api_1 = require("../api/msExercise.api");
 const getAllRoutine = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { limit } = req.query;
@@ -42,6 +43,10 @@ const insertRoutine = (req, res) => __awaiter(void 0, void 0, void 0, function* 
             if (!(0, validationUtil_1.validationObjectIsEmpty)(existName))
                 throw { code: 400, message: 'name alredy exist' };
         }
+        // Valiata if exercise exist
+        data.exercises.map(item => {
+            msExercise_api_1.msExercise.getExerciseById(item);
+        });
         res.status(201).send(yield (0, routine_service_1.insertRoutineService)({
             name: (data.name != undefined) ? data.name : (0, validationUtil_1.getDateNow)(),
             userId: req.userId,
@@ -63,6 +68,10 @@ const updateRoutine = (req, res) => __awaiter(void 0, void 0, void 0, function* 
             if (!(0, validationUtil_1.validationObjectIsEmpty)(existName))
                 throw { code: 400, message: 'name alredy exist' };
         }
+        // Valiata if exercise exist
+        data.exercises.map(item => {
+            msExercise_api_1.msExercise.getExerciseById(item);
+        });
         const oldData = yield (0, routine_service_1.getRoutineServiceById)(id);
         res.status(200).send(yield (0, routine_service_1.updateRoutineService)(id, oldData, {
             name: (data.name != undefined) ? data.name : (0, validationUtil_1.getDateNow)(),

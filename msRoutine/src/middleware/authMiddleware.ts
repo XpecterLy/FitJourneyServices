@@ -12,6 +12,7 @@ declare global {
             username?: string;
             email?: string;
             rol?: string;
+            token?: string;
         }
     }
 }
@@ -58,6 +59,7 @@ export function verifyToken(req: Request, res: Response, next: NextFunction): vo
             req.username = decoded.username;
             req.email = decoded.email;
             req.rol = decoded.rol;
+            req.token = token;
             next();
         } catch (error) {
             ErrorException(res, error);

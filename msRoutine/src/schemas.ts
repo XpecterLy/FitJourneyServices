@@ -10,10 +10,20 @@ const routineLimit = Joi.object().keys({
 
 const routineInsert = Joi.object().keys({
     name: Joi.string().min(3).max(60),
+    exercises: Joi.array().items(Joi.string())
 });
 
 const routineUpdate = Joi.object().keys({
-    name: Joi.string().min(3).max(60).required(),
+    name: Joi.string().min(3).max(60),
+    exercises: Joi.array().items(Joi.string())
+});
+
+const addExerciseToRoutine = Joi.object().keys({
+    exercises: Joi.array().items(Joi.string())
+});
+
+const deleteExerciseToRoutine = Joi.object().keys({
+    exercises: Joi.array().items(Joi.string())
 });
 
 export default {
@@ -21,4 +31,6 @@ export default {
   "/routine/limit": routineLimit,
   "/routine/insert": routineInsert,
   "/routine/update": routineUpdate,
+  "/routine/addExerciseToRoutine": addExerciseToRoutine,
+  "/routine/deleteExerciseToRoutine": deleteExerciseToRoutine,
 } as { [key: string]: ObjectSchema };

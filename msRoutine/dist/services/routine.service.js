@@ -16,6 +16,7 @@ const getAllRoutineService = (userId, limit) => __awaiter(void 0, void 0, void 0
     return res.map(item => ({
         id: item.id,
         name: item.name,
+        exercises: item.exercises,
         dateCreate: item.dateCreate
     }));
 });
@@ -27,6 +28,7 @@ const getRoutineServiceById = (id) => __awaiter(void 0, void 0, void 0, function
     return {
         id: res.id,
         name: res.name,
+        exercises: res.exercises,
         dateCreate: res.dateCreate
     };
 });
@@ -47,6 +49,7 @@ const getRoutineServiceByName = (name, userId) => __awaiter(void 0, void 0, void
     return {
         id: res.id,
         name: res.name,
+        exercises: res.exercises,
         dateCreate: res.dateCreate
     };
 });
@@ -59,6 +62,7 @@ const insertRoutineService = (data) => __awaiter(void 0, void 0, void 0, functio
     return {
         id: res.id,
         name: data.name,
+        exercises: data.exercises,
         dateCreate: data.dateCreate
     };
 });
@@ -66,11 +70,13 @@ exports.insertRoutineService = insertRoutineService;
 const updateRoutineService = (id, oldData, newData) => __awaiter(void 0, void 0, void 0, function* () {
     const data = {
         name: newData.name != undefined ? newData.name : oldData.name,
+        exercises: newData.exercises != undefined ? newData.exercises : oldData.exercises,
     };
     yield routineScheme_1.routineModel.updateOne({ _id: id }, data);
     return {
         id: id,
         name: data.name,
+        exercises: data.exercises,
         dateCreate: data.dateCreate
     };
 });

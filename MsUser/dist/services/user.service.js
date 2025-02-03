@@ -11,6 +11,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.NotExistRootUserValidation = exports.DeleteUserService = exports.UpdateUserServie = exports.GetUserByEmailService = exports.GetUserByUserNameService = exports.GetUserByIdService = exports.RegisterUserService = exports.GetAllUsersService = void 0;
 const user_schema_1 = require("../schemas/user.schema");
+const passwordUtil_1 = require("../utils/passwordUtil");
 const GetAllUsersService = (rol, limit) => __awaiter(void 0, void 0, void 0, function* () {
     var filter = {};
     filter = rol ? Object.assign(Object.assign({}, filter), { rol: rol }) : filter;
@@ -95,16 +96,21 @@ const DeleteUserService = (id) => __awaiter(void 0, void 0, void 0, function* ()
 });
 exports.DeleteUserService = DeleteUserService;
 const NotExistRootUserValidation = () => __awaiter(void 0, void 0, void 0, function* () {
-    const exist = yield (0, exports.GetAllUsersService)('admin');
-    const data = {
-        username: 'user_root',
-        email: 'root@gmail.com',
-        rol: 'admin',
-        password: '@Root123'
-    };
-    if (exist.length <= 0) {
+    const existRoot = yield (0, exports.GetAllUsersService)('admin');
+    console.log(`count root: ${existRoot}`);
+    const hash = yield (0, passwordUtil_1.encryptPassword)('@Root123');
+    if (existRoot.length <= 0) {
+        const data = {
+            username: 'user_root',
+            email: 'root@gmail.com',
+            rol: 'admin',
+            password: hash
+        };
         yield (0, exports.RegisterUserService)(data);
-        console.log('add admin user');
+        console.log('add admin');
+    }
+    else {
+        console.log('admin exist');
     }
 });
 exports.NotExistRootUserValidation = NotExistRootUserValidation;
