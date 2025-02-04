@@ -1,6 +1,6 @@
 FROM node:18
 
-RUN npx tsc
+RUN 
 
 RUN mkdir -p /home/node/app/node_modules
 

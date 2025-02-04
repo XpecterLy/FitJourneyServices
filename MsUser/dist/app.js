@@ -8,7 +8,6 @@ require("dotenv/config");
 const routes_1 = require("./routes/routes");
 const db_1 = require("./config/db");
 const user_service_1 = require("./services/user.service");
-require('dotenv').config();
 const app = (0, express_1.default)();
 app.use(express_1.default.json());
 (0, db_1.connectToDatabase)();

@@ -5,8 +5,6 @@ import { routesV1 } from './routes/routes';
 import {connectToDatabase} from './config/db'
 import { NotExistRootUserValidation } from './services/user.service';
 
-require('dotenv').config()
-
 const app = express();
 app.use(express.json());
 
