@@ -34,11 +34,18 @@ export const  checkAuth = (req: Request, res: Response, next: NextFunction) => {
         }else{
 
         }
-    } catch (error) {
-        if (error instanceof jwt.JsonWebTokenError) {
-            res.status(401).json({ message: 'Invalid token' });
+    } catch (error: any) {
+        if (error instanceof jwt.TokenExpiredError) {
+            res.status(401).send({ message: 'Token expired' });
         }
-        ErrorException(res, error);
+        else if (error instanceof jwt.JsonWebTokenError) {
+            res.status(401).send({ message: 'Invalid token' });
+        }
+        else if (error instanceof jwt.NotBeforeError) {
+            res.status(401).send({ message: 'Token not active yet' });
+        }
+         
+        res.status(500).send({ error: 'Internal server error' });
     }
 }
 
