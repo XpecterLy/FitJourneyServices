@@ -1,28 +1,40 @@
-import axios from 'axios';
-import { ApiErrorType, ErrorType } from '../../types/error.type';
+import { isAxiosError } from 'axios';
+import { ErrorType } from '../../types/error.type';
 import { CategoriesMuscleGroupType } from '../../types/categoriesMuscleGroup.types';
+import { categoriesMuscleGroupApiConfig } from '../../config/config/categoriesApi.config';
 
-export const GetMusclegroupIdById = async (token: string, id: string): Promise<CategoriesMuscleGroupType> => {
-    const host = process.env.MS_JOURNEY_MS_MUSCLE_GROUP;
-    return await axios.get<CategoriesMuscleGroupType>(
-            `${host}?id=${id}`, {
-            headers: {
-                Authorization: token
-            }
-        })
-        .then(function (response) {
-            return response.data;
-        })
-        .catch(function (error) {
-            console.log(error.response);
-            if(error.status == 422){
-                throw { code: 422, message: 'the server was unable to process the request because it contains invalid data' } as ErrorType;
-            }
-            else if (error.response && error.response.data) {
+
+export class muscleGroupApi {
+    static getMusclegroupIdById = async (token: string, id: string): Promise<CategoriesMuscleGroupType> => {
+        try {
+            const { data } = await categoriesMuscleGroupApiConfig.get<CategoriesMuscleGroupType>(`?id=${id}`, {
+                headers: {
+                    Authorization: token
+                }
+            });
+            return data;
+        } catch (error) {
+            if (isAxiosError(error)) {
                 
-                const errorVal = error.response.data as ApiErrorType;
-                throw { code: error.status, message: errorVal.message } as ApiErrorType;
+                throw { code: error.response?.status, message: error.response?.data.message } as ErrorType
             }
-            throw { code: 500, message: 'internal server error' } as ErrorType;
-        })
+            throw { code: 500, message: 'Internal server error' } as ErrorType
+        }
+    }
+
+    static getAllMusclegroups = async (token: string): Promise<CategoriesMuscleGroupType[]> => {
+        try {
+            const { data } = await categoriesMuscleGroupApiConfig.get<CategoriesMuscleGroupType[]>(`/all`, {
+                headers: {
+                    Authorization: token
+                }
+            });
+            return data;
+        } catch (error) {
+            if (isAxiosError(error)) {
+                throw { code: error.response?.status, message: error.response?.data.message } as ErrorType
+            }
+            throw { code: 500, message: 'Internal server error' } as ErrorType
+        }
+    }
 }

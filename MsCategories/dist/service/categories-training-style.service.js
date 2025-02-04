@@ -11,8 +11,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.DeleteCategoriesTrainingStylesService = exports.UpdateCategoriesTrainingStylesService = exports.InsertCategoriesTrainingStylesService = exports.GetCategoriesTrainingStylesByNameService = exports.GetCategoriesTrainingStylesByIdService = exports.GetAllCategoriesTrainingStylesService = void 0;
 const CategoriesTrainingStyles_schema_1 = require("../schemas/CategoriesTrainingStyles.schema");
-const GetAllCategoriesTrainingStylesService = (limit, offset) => __awaiter(void 0, void 0, void 0, function* () {
-    const res = yield CategoriesTrainingStyles_schema_1.categoriesTrainingStylesModel.find().limit(limit).skip(offset - 1);
+const GetAllCategoriesTrainingStylesService = () => __awaiter(void 0, void 0, void 0, function* () {
+    const res = yield CategoriesTrainingStyles_schema_1.categoriesTrainingStylesModel.find();
     const resList = res.map((item) => ({
         id: item.id,
         name: item.name || '',

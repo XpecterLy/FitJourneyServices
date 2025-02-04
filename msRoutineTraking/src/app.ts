@@ -14,7 +14,7 @@ routesV1(app);
 
 connectToDatabase();
 
-const port = process.env.PORT || 3007;
+const port = process.env.PORT || 6;
 
 app.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);

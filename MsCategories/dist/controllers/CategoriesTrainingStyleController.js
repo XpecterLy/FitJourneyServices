@@ -16,10 +16,7 @@ const validationUtil_1 = require("../utils/validationUtil");
 const categoriesSeeds_1 = require("../seeds/categoriesSeeds");
 const GetAllCategoriesTrainingStyles = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { limit, offset } = req.query;
-        const limitValue = limit != undefined ? Number(limit) : 10;
-        const offsetValue = offset != undefined ? Number(offset) : 1;
-        res.status(200).send(yield (0, categories_training_style_service_1.GetAllCategoriesTrainingStylesService)(limitValue, offsetValue));
+        res.status(200).send(yield (0, categories_training_style_service_1.GetAllCategoriesTrainingStylesService)());
     }
     catch (error) {
         (0, errorUtil_1.ErrorException)(res, error);

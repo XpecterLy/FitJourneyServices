@@ -29,8 +29,6 @@ const checkAuth = (req, res, next) => {
         if (tokenData.id) {
             next();
         }
-        else {
-        }
     }
     catch (error) {
         if (error instanceof jwt.TokenExpiredError) {
@@ -42,7 +40,9 @@ const checkAuth = (req, res, next) => {
         else if (error instanceof jwt.NotBeforeError) {
             res.status(401).send({ message: 'Token not active yet' });
         }
-        res.status(500).send({ error: 'Internal server error' });
+        else {
+            res.status(500).send({ error: 'Internal server error' });
+        }
     }
 };
 exports.checkAuth = checkAuth;

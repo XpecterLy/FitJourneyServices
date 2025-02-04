@@ -4,21 +4,21 @@ import { DeleteExerciseService, GetAllExerciseService, GetExerciseServiceById, G
 import { exerciseType } from '../types/exercise.type';
 import { validationObjectIsEmpty } from '../utils/validationUtil';
 import { ErrorType } from '../types/error.type';
-import { GetMusclegroupIdById } from '../api/msCategories/muscle-group.api';
-import { GetTrainingStyleIdById } from '../api/msCategories/training-styles-api';
-import { exercisesSeed } from '../seeds/exercisesSeeds';
+import { exerciseSeeds } from '../seeds/exercisesSeeds';
+import { muscleGroupApi } from '../api/msCategories/muscle-group.api';
+import { trainingStyleApi } from '../api/msCategories/training-styles-api';
 
-export const GetAllExercise = async (req: Request<{}, {}, {}, {limit?: string, offset?: string, muscleGroupId?: string}>, res: Response) => {
+export const GetAllExercise = async (req: Request<{}, {}, {}, {limit?: string, offset?: string, muscleGroupId?: string, trainingStyleId: string}>, res: Response) => {
     try {
-        const {limit, offset, muscleGroupId} = req.query;
-
+        const {limit, offset, muscleGroupId, trainingStyleId} = req.query;
         
         const limitValue = limit != undefined ? Number(limit) : 10;
         const offsetValue = offset != undefined ? Number(offset) : 1;
 
-        if(muscleGroupId != undefined) await GetMusclegroupIdById(req.token, muscleGroupId);
+        if(muscleGroupId != undefined) await muscleGroupApi.getMusclegroupIdById(req.token, muscleGroupId);
+        if(trainingStyleId != undefined) await trainingStyleApi.getTrainingStyleIdById(req.token, trainingStyleId);
 
-        res.status(200).send(await GetAllExerciseService(limitValue, offsetValue, muscleGroupId));
+        res.status(200).send(await GetAllExerciseService(limitValue, offsetValue, muscleGroupId, trainingStyleId));
     } catch (error) {
         ErrorException(res, error);
     }
@@ -36,8 +36,8 @@ export const GetExercise = async (req: Request<{}, {}, {}, {id: string}>, res: R
 export const InsertExercise = async (req: Request<{}, {}, exerciseType, {}>, res: Response) => {
     try {
         const data = req.body;     
-        await GetMusclegroupIdById(req.token, data.muscleGroupId);
-        await GetTrainingStyleIdById(req.token, data.trainingStyleId);
+        await  muscleGroupApi.getMusclegroupIdById(req.token, data.muscleGroupId);
+        await trainingStyleApi.getTrainingStyleIdById(req.token, data.trainingStyleId);
 
         const existName = await GetExerciseServiceByName(data.muscleGroupId, data.name);
         if(!validationObjectIsEmpty(existName)) throw { code: 400, message: 'exercise name alredy exist' } as ErrorType ;
@@ -74,23 +74,22 @@ export const DeleteExercise = async (req: Request<{}, {}, {}, {id: string}>, res
 
 export const AddExercisesSeed = async (req: Request, res: Response) => {
     try {
-        const pechoData = exercisesSeed.pechoSeed();
-        const tricepData = exercisesSeed.tricepSeed();
+        // Get list exercises
+        const exercisesListSeeds = await exerciseSeeds(req.token);
 
-        pechoData.map(async item => {
-            insertExerciseIfNotExist(item);
-        });
-        tricepData.map(async item => {
+        // Insert list exercises
+        exercisesListSeeds.map(async item => {
             insertExerciseIfNotExist(item);
         });
 
-        res.status(201).send();
+        res.status(201).send(exercisesListSeeds);
 
     } catch (error) {
         ErrorException(res, error);
     }
 }
 
+// Validate if exercise exist in db, if not exist add in db
 const insertExerciseIfNotExist = async ( exercise: exerciseType ) => {
     const existName = await GetExerciseServiceByName(exercise.muscleGroupId, exercise.name);
     if(validationObjectIsEmpty(existName)) InsertExerciseService(exercise);

@@ -8,33 +8,47 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
+var _a;
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.GetTrainingStyleIdById = void 0;
-const axios_1 = __importDefault(require("axios"));
-;
-const GetTrainingStyleIdById = (token, id) => __awaiter(void 0, void 0, void 0, function* () {
-    const host = process.env.MS_JOURNEY_MS_TRAINING_STYLE;
-    return yield axios_1.default.get(`${host}?id=${id}`, {
-        headers: {
-            Authorization: token
+exports.trainingStyleApi = void 0;
+const axios_1 = require("axios");
+const categoriesApi_config_1 = require("../../config/config/categoriesApi.config");
+class trainingStyleApi {
+}
+exports.trainingStyleApi = trainingStyleApi;
+_a = trainingStyleApi;
+trainingStyleApi.getTrainingStyleIdById = (token, id) => __awaiter(void 0, void 0, void 0, function* () {
+    var _b, _c;
+    try {
+        const { data } = yield categoriesApi_config_1.categoriesTrainingStyleApiConfig.get(`?id=${id}`, {
+            headers: {
+                Authorization: token
+            }
+        });
+        return data;
+    }
+    catch (error) {
+        if ((0, axios_1.isAxiosError)(error)) {
+            console.log(error.request);
+            throw { code: (_b = error.response) === null || _b === void 0 ? void 0 : _b.status, message: (_c = error.response) === null || _c === void 0 ? void 0 : _c.data.message };
         }
-    })
-        .then(function (response) {
-        return response.data;
-    })
-        .catch(function (error) {
-        console.log(error.response);
-        if (error.status == 422) {
-            throw { code: 422, message: 'the server was unable to process the request because it contains invalid data' };
-        }
-        else if (error.response && error.response.data) {
-            const errorVal = error.response.data;
-            throw { code: error.status, message: errorVal.message };
-        }
-        throw { code: 500, message: 'internal server error' };
-    });
+        throw { code: 500, message: 'Internal server error' };
+    }
 });
-exports.GetTrainingStyleIdById = GetTrainingStyleIdById;
+trainingStyleApi.getallTrainingStyles = (token) => __awaiter(void 0, void 0, void 0, function* () {
+    var _b, _c;
+    try {
+        const { data } = yield categoriesApi_config_1.categoriesTrainingStyleApiConfig.get(`/all`, {
+            headers: {
+                Authorization: token
+            }
+        });
+        return data;
+    }
+    catch (error) {
+        if ((0, axios_1.isAxiosError)(error)) {
+            throw { code: (_b = error.response) === null || _b === void 0 ? void 0 : _b.status, message: (_c = error.response) === null || _c === void 0 ? void 0 : _c.data.message };
+        }
+        throw { code: 500, message: 'Internal server error' };
+    }
+});

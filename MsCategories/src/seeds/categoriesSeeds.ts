@@ -50,15 +50,7 @@ const trainingMuscleGroupData = [
         details: ''
     },
     {
-        name: 'dorsales',
-        details: ''
-    },
-    {
-        name: 'espalda baja',
-        details: ''
-    },
-    {
-        name: 'espalda media',
+        name: 'espalda',
         details: ''
     },
     {

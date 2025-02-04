@@ -13,17 +13,19 @@ exports.AddExercisesSeed = exports.DeleteExercise = exports.UpdateExercise = exp
 const errorUtil_1 = require("../utils/errorUtil");
 const exercise_service_1 = require("../services/exercise.service");
 const validationUtil_1 = require("../utils/validationUtil");
+const exercisesSeeds_1 = require("../seeds/exercisesSeeds");
 const muscle_group_api_1 = require("../api/msCategories/muscle-group.api");
 const training_styles_api_1 = require("../api/msCategories/training-styles-api");
-const exercisesSeeds_1 = require("../seeds/exercisesSeeds");
 const GetAllExercise = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { limit, offset, muscleGroupId } = req.query;
+        const { limit, offset, muscleGroupId, trainingStyleId } = req.query;
         const limitValue = limit != undefined ? Number(limit) : 10;
         const offsetValue = offset != undefined ? Number(offset) : 1;
         if (muscleGroupId != undefined)
-            yield (0, muscle_group_api_1.GetMusclegroupIdById)(req.token, muscleGroupId);
-        res.status(200).send(yield (0, exercise_service_1.GetAllExerciseService)(limitValue, offsetValue, muscleGroupId));
+            yield muscle_group_api_1.muscleGroupApi.getMusclegroupIdById(req.token, muscleGroupId);
+        if (trainingStyleId != undefined)
+            yield training_styles_api_1.trainingStyleApi.getTrainingStyleIdById(req.token, trainingStyleId);
+        res.status(200).send(yield (0, exercise_service_1.GetAllExerciseService)(limitValue, offsetValue, muscleGroupId, trainingStyleId));
     }
     catch (error) {
         (0, errorUtil_1.ErrorException)(res, error);
@@ -43,8 +45,8 @@ exports.GetExercise = GetExercise;
 const InsertExercise = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const data = req.body;
-        yield (0, muscle_group_api_1.GetMusclegroupIdById)(req.token, data.muscleGroupId);
-        yield (0, training_styles_api_1.GetTrainingStyleIdById)(req.token, data.trainingStyleId);
+        yield muscle_group_api_1.muscleGroupApi.getMusclegroupIdById(req.token, data.muscleGroupId);
+        yield training_styles_api_1.trainingStyleApi.getTrainingStyleIdById(req.token, data.trainingStyleId);
         const existName = yield (0, exercise_service_1.GetExerciseServiceByName)(data.muscleGroupId, data.name);
         if (!(0, validationUtil_1.validationObjectIsEmpty)(existName))
             throw { code: 400, message: 'exercise name alredy exist' };
@@ -84,21 +86,20 @@ const DeleteExercise = (req, res) => __awaiter(void 0, void 0, void 0, function*
 exports.DeleteExercise = DeleteExercise;
 const AddExercisesSeed = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const pechoData = exercisesSeeds_1.exercisesSeed.pechoSeed();
-        const tricepData = exercisesSeeds_1.exercisesSeed.tricepSeed();
-        pechoData.map((item) => __awaiter(void 0, void 0, void 0, function* () {
+        // Get list exercises
+        const exercisesListSeeds = yield (0, exercisesSeeds_1.exerciseSeeds)(req.token);
+        // Insert list exercises
+        exercisesListSeeds.map((item) => __awaiter(void 0, void 0, void 0, function* () {
             insertExerciseIfNotExist(item);
         }));
-        tricepData.map((item) => __awaiter(void 0, void 0, void 0, function* () {
-            insertExerciseIfNotExist(item);
-        }));
-        res.status(201).send();
+        res.status(201).send(exercisesListSeeds);
     }
     catch (error) {
         (0, errorUtil_1.ErrorException)(res, error);
     }
 });
 exports.AddExercisesSeed = AddExercisesSeed;
+// Validate if exercise exist in db, if not exist add in db
 const insertExerciseIfNotExist = (exercise) => __awaiter(void 0, void 0, void 0, function* () {
     const existName = yield (0, exercise_service_1.GetExerciseServiceByName)(exercise.muscleGroupId, exercise.name);
     if ((0, validationUtil_1.validationObjectIsEmpty)(existName))

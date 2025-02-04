@@ -16,10 +16,8 @@ const categories_muscle_group_service_1 = require("../service/categories-muscle-
 const categoriesSeeds_1 = require("../seeds/categoriesSeeds");
 const GetAllCategoriesMuscleGroup = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { trainingStylesId, limit, offset } = req.query;
-        const limitValue = limit != undefined ? Number(limit) : 10;
-        const offsetValue = offset != undefined ? Number(offset) : 1;
-        res.status(200).send(yield (0, categories_muscle_group_service_1.GetAllCategoriesMuscleGroupService)(limitValue, offsetValue, trainingStylesId));
+        const { trainingStylesId } = req.query;
+        res.status(200).send(yield (0, categories_muscle_group_service_1.GetAllCategoriesMuscleGroupService)(trainingStylesId));
     }
     catch (error) {
         (0, errorUtil_1.ErrorException)(res, error);

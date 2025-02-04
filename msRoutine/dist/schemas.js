@@ -8,7 +8,7 @@ const routineId = joi_1.default.object().keys({
     id: joi_1.default.string().min(24).max(24).required(),
 });
 const routineFilter = joi_1.default.object().keys({
-    limit: joi_1.default.number().min(1).max(50).optional(),
+    limit: joi_1.default.number().min(0).max(50).optional(),
     offset: joi_1.default.number().min(1),
 });
 const routineInsert = joi_1.default.object().keys({

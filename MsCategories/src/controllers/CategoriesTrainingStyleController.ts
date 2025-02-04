@@ -6,13 +6,9 @@ import { validationObjectIsEmpty } from '../utils/validationUtil';
 import { ErrorType } from '../types/error.type';
 import { categoriesSeeds } from '../seeds/categoriesSeeds';
 
-export const GetAllCategoriesTrainingStyles = async(req: Request<{}, {}, {}, {limit?: string, offset?: string}>, res: Response) => {
+export const GetAllCategoriesTrainingStyles = async(req: Request<{}, {}, {}, {}>, res: Response) => {
     try {
-        const {limit, offset} = req.query;
-        const limitValue = limit != undefined ? Number(limit) : 10;
-        const offsetValue = offset != undefined ? Number(offset) : 1;
-
-        res.status(200).send(await GetAllCategoriesTrainingStylesService(limitValue, offsetValue));
+        res.status(200).send(await GetAllCategoriesTrainingStylesService());
     } catch (error) {
         ErrorException(res, error);
     }

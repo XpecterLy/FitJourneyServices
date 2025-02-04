@@ -6,13 +6,11 @@ import { DeleteCategoriesMuscleGroupService, GetAllCategoriesMuscleGroupService,
 import { CategoriesMuscleGroupType } from '../types/categoriesMuscleGroup.types';
 import { categoriesSeeds } from '../seeds/categoriesSeeds';
 
-export const GetAllCategoriesMuscleGroup = async(req: Request<{}, {}, {}, {trainingStylesId: string, limit: string, offset?: string}>, res: Response) => {
+export const GetAllCategoriesMuscleGroup = async(req: Request<{}, {}, {}, {trainingStylesId: string}>, res: Response) => {
     try {
-        const {trainingStylesId, limit, offset} = req.query;
-        const limitValue = limit != undefined ? Number(limit) : 10;
-        const offsetValue = offset != undefined ? Number(offset) : 1;
+        const {trainingStylesId} = req.query;
 
-        res.status(200).send(await GetAllCategoriesMuscleGroupService(limitValue, offsetValue, trainingStylesId));
+        res.status(200).send(await GetAllCategoriesMuscleGroupService(trainingStylesId));
     } catch (error) {
         ErrorException(res, error);
     }

@@ -1,28 +1,40 @@
-import axios from 'axios';
-import { ApiErrorType, ErrorType } from '../../types/error.type';
+import { isAxiosError } from 'axios';
+import { ErrorType } from '../../types/error.type';
 import { CategoriesTrainingStyleType } from '../../types/CategoriesTrainingStyleType.types';
-;
-export const GetTrainingStyleIdById = async (token: string, id: string): Promise<CategoriesTrainingStyleType> => {
-    const host = process.env.MS_JOURNEY_MS_TRAINING_STYLE;
-    return await axios.get<CategoriesTrainingStyleType>(
-            `${host}?id=${id}`, {
-            headers: {
-                Authorization: token
-            }
-        })
-        .then(function (response) {
-            return response.data;
-        })
-        .catch(function (error) {
-            console.log(error.response);
-            if(error.status == 422){
-                throw { code: 422, message: 'the server was unable to process the request because it contains invalid data' } as ErrorType;
-            }
-            else if (error.response && error.response.data) {
+import { categoriesTrainingStyleApiConfig } from '../../config/config/categoriesApi.config';
+
+export class trainingStyleApi {
+    static getTrainingStyleIdById = async (token: string, id: string): Promise<CategoriesTrainingStyleType> => {
+        try {
+            const { data } = await categoriesTrainingStyleApiConfig.get<CategoriesTrainingStyleType>(`?id=${id}`, {
+                headers: {
+                    Authorization: token
+                }
+            });
+            return data;
+        } catch (error) {
+            if (isAxiosError(error)) {
+                console.log(error.request);
                 
-                const errorVal = error.response.data as ApiErrorType;
-                throw { code: error.status, message: errorVal.message } as ApiErrorType;
+                throw { code: error.response?.status, message: error.response?.data.message } as ErrorType
             }
-            throw { code: 500, message: 'internal server error' } as ErrorType;
-        })
+            throw { code: 500, message: 'Internal server error' } as ErrorType
+        }
+    }
+
+    static getallTrainingStyles = async (token: string): Promise<CategoriesTrainingStyleType[]> => {
+        try {
+            const { data } = await categoriesTrainingStyleApiConfig.get<CategoriesTrainingStyleType[]>(`/all`, {
+                headers: {
+                    Authorization: token
+                }
+            });
+            return data;
+        } catch (error) {
+            if (isAxiosError(error)) {
+                throw { code: error.response?.status, message: error.response?.data.message } as ErrorType
+            }
+            throw { code: 500, message: 'Internal server error' } as ErrorType
+        }
+    }
 }

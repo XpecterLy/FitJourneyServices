@@ -11,12 +11,12 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.DeleteCategoriesMuscleGroupService = exports.UpdateCategoriesMuscleGroupService = exports.InsertCategoriesMuscleGroupService = exports.GetCategoriesMuscleGroupByNameService = exports.GetCategoriesMuscleGroupByIdService = exports.GetAllCategoriesMuscleGroupService = void 0;
 const CategoriesMuscleGroup_schema_1 = require("../schemas/CategoriesMuscleGroup.schema");
-const GetAllCategoriesMuscleGroupService = (limit, offset, trainingStylesId) => __awaiter(void 0, void 0, void 0, function* () {
+const GetAllCategoriesMuscleGroupService = (trainingStylesId) => __awaiter(void 0, void 0, void 0, function* () {
     var filter = {};
     trainingStylesId != undefined ?
         filter = Object.assign(Object.assign({}, filter), { trainingStylesId: trainingStylesId }) :
         filter;
-    const res = yield CategoriesMuscleGroup_schema_1.categoriesMuscleGroupModel.find(filter).limit(limit).skip(offset - 1);
+    const res = yield CategoriesMuscleGroup_schema_1.categoriesMuscleGroupModel.find(filter);
     const resList = res.map((item) => ({
         id: item.id,
         name: item.name || '',

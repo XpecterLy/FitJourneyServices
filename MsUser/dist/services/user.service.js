@@ -101,8 +101,8 @@ const NotExistRootUserValidation = () => __awaiter(void 0, void 0, void 0, funct
     const hash = yield (0, passwordUtil_1.encryptPassword)('@Root123');
     if (existRoot.length <= 0) {
         const data = {
-            username: 'user_root',
-            email: 'root@gmail.com',
+            username: process.env.USER_DEFAULT || 'user_root',
+            email: process.env.PASSWORD_DEFAULT || 'root@gmail.com',
             rol: 'admin',
             password: hash
         };

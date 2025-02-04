@@ -2,7 +2,7 @@ import { categoriesMuscleGroupModel } from "../schemas/CategoriesMuscleGroup.sch
 import { CategoriesMuscleGroupType } from "../types/categoriesMuscleGroup.types";
 import { ErrorType } from "../types/error.type";
 
-export const GetAllCategoriesMuscleGroupService = async(limit: number, offset: number, trainingStylesId?: string): Promise<CategoriesMuscleGroupType[]> => {
+export const GetAllCategoriesMuscleGroupService = async(trainingStylesId?: string): Promise<CategoriesMuscleGroupType[]> => {
     var filter = {};
 
     trainingStylesId != undefined ? 
@@ -13,7 +13,7 @@ export const GetAllCategoriesMuscleGroupService = async(limit: number, offset: n
         } : 
         filter;
 
-    const res = await categoriesMuscleGroupModel.find(filter).limit(limit).skip(offset - 1);
+    const res = await categoriesMuscleGroupModel.find(filter);
 
     const resList: CategoriesMuscleGroupType[] =  res.map((item) => ({
         id: item.id,

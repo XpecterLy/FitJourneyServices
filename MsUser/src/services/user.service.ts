@@ -97,8 +97,8 @@ export const NotExistRootUserValidation = async () => {
 
         if (existRoot.length <= 0){
             const data = {
-                username: 'user_root',
-                email: 'root@gmail.com',
+                username: process.env.USER_DEFAULT || 'user_root',
+                email: process.env.PASSWORD_DEFAULT || 'root@gmail.com',
                 rol: 'admin',
                 password: hash
             } as UserDataType;    
