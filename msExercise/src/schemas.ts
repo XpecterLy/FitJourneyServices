@@ -6,9 +6,9 @@ const ExerciseIdSchema = Joi.object().keys({
 
 const ExerciseFilterSchema = Joi.object().keys({
   muscleGroupId: Joi.string().min(24).max(24).optional(),
-  limit: Joi.string().min(0).max(50).optional(),
+  limit: Joi.number().min(0).max(50).optional(),
+  offset: Joi.number().min(1).optional(),
 });
-
 
 const ExerciseRegisterSchema = Joi.object().keys({
   name: Joi.string().min(1).max(50).required(),

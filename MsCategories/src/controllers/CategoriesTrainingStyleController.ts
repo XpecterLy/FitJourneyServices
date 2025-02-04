@@ -4,12 +4,15 @@ import { ErrorException } from '../utils/errorUtil';
 import { CategoriesTrainingStylesType } from '../types/categoriesTrainingStyle.types';
 import { validationObjectIsEmpty } from '../utils/validationUtil';
 import { ErrorType } from '../types/error.type';
+import { categoriesSeeds } from '../seeds/categoriesSeeds';
 
-export const GetAllCategoriesTrainingStyles = async(req: Request<{}, {}, {}, {limit?: string}>, res: Response) => {
+export const GetAllCategoriesTrainingStyles = async(req: Request<{}, {}, {}, {limit?: string, offset?: string}>, res: Response) => {
     try {
-        const {limit} = req.query;
-        const pageLimit = limit != undefined ? Number(limit) : undefined;
-        res.status(200).send(await GetAllCategoriesTrainingStylesService(pageLimit));
+        const {limit, offset} = req.query;
+        const limitValue = limit != undefined ? Number(limit) : 10;
+        const offsetValue = offset != undefined ? Number(offset) : 1;
+
+        res.status(200).send(await GetAllCategoriesTrainingStylesService(limitValue, offsetValue));
     } catch (error) {
         ErrorException(res, error);
     }
@@ -64,6 +67,20 @@ export const DeleteCategoriesTrainingStyle = async(req: Request<{}, {}, {}, {id:
         await GetCategoriesTrainingStylesByIdService(id);
         await DeleteCategoriesTrainingStylesService(id);
         res.status(200).send();
+    } catch (error) {
+        ErrorException(res, error);
+    }
+}
+
+export const AddCategoriesTrainingStyleSeed = async (req: Request, res: Response) => {
+    try {
+        const categories = categoriesSeeds.trainingStyleSeed();
+        categories.map(async item => {
+            const existName = await GetCategoriesTrainingStylesByNameService(item.name);
+            if(validationObjectIsEmpty(existName)) InsertCategoriesTrainingStylesService(item);
+        });
+        
+        res.status(201).send(categories);
     } catch (error) {
         ErrorException(res, error);
     }

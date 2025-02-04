@@ -26,6 +26,7 @@ const userGet = joi_1.default.object().keys({
 const userGetAllFilter = joi_1.default.object().keys({
     rol: joi_1.default.string().min(4).max(5).optional().valid("admin", "user"),
     limit: joi_1.default.number().min(0).max(50).optional(),
+    offset: joi_1.default.number().min(1)
 });
 exports.default = {
     "/user/data": userRegister,

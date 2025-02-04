@@ -3,18 +3,20 @@ export interface RoutineExerciseType {
     userId: string;
     routineTrakingId: string;
     exerciseId: string;
-    series: number;
-    repetitions: number;
-    weight: number;
-    time: number;
+    series: SeriesType[];
+    dateTime: string;
 }
 
 export interface ResRoutineExerciseType {
     id: string;
     routineTrakingId: string;
     exerciseId: string;
-    series: number;
+    series: SeriesType[];
+}
+
+export interface SeriesType {
     repetitions: number;
     weight: number;
     time: number;
+    dateCreate: string;
 }

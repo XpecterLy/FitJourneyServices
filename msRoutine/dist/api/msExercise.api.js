@@ -16,12 +16,11 @@ class msExercise {
 }
 exports.msExercise = msExercise;
 _a = msExercise;
-msExercise.getExerciseById = (id) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        const { data } = yield msExercise_config_1.msExerciseConfig.get(`?id=${id}`);
-        return data;
-    }
-    catch (error) {
-        throw { code: 400, message: `Error to get exercise id: ${id}` };
-    }
+msExercise.getExerciseById = (id, token) => __awaiter(void 0, void 0, void 0, function* () {
+    const { data } = yield msExercise_config_1.msExerciseConfig.get(`?id=${id}`, {
+        headers: {
+            "Authorization": token
+        }
+    });
+    return data;
 });

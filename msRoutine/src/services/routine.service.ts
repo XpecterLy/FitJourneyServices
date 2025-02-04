@@ -2,8 +2,8 @@ import { routineModel } from "../schemes/routineScheme"
 import { ErrorType } from "../types/error.type";
 import { ResRoutineType, RoutineType } from "../types/routine.type"
 
-export const getAllRoutineService = async (userId: string, limit?: number): Promise<ResRoutineType[]> => {
-    const res = await routineModel.find({userId: userId}).limit(limit || 10);
+export const getAllRoutineService = async (limit: number, offset: number, userId: string, ): Promise<ResRoutineType[]> => {
+    const res = await routineModel.find({userId: userId}).limit(limit).skip(offset - 1);
     return res.map(item => ({
         id: item.id,
         name: item.name,

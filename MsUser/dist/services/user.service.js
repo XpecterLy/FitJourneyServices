@@ -12,10 +12,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.NotExistRootUserValidation = exports.DeleteUserService = exports.UpdateUserServie = exports.GetUserByEmailService = exports.GetUserByUserNameService = exports.GetUserByIdService = exports.RegisterUserService = exports.GetAllUsersService = void 0;
 const user_schema_1 = require("../schemas/user.schema");
 const passwordUtil_1 = require("../utils/passwordUtil");
-const GetAllUsersService = (rol, limit) => __awaiter(void 0, void 0, void 0, function* () {
+const GetAllUsersService = (limit, offset, rol) => __awaiter(void 0, void 0, void 0, function* () {
     var filter = {};
     filter = rol ? Object.assign(Object.assign({}, filter), { rol: rol }) : filter;
-    const usersList = yield user_schema_1.userModel.find(filter).limit(limit || 10);
+    const usersList = yield user_schema_1.userModel.find(filter).limit(limit).skip(offset - 1);
     const user = usersList.map((item) => ({
         id: item.id,
         username: item.username,
@@ -96,7 +96,7 @@ const DeleteUserService = (id) => __awaiter(void 0, void 0, void 0, function* ()
 });
 exports.DeleteUserService = DeleteUserService;
 const NotExistRootUserValidation = () => __awaiter(void 0, void 0, void 0, function* () {
-    const existRoot = yield (0, exports.GetAllUsersService)('admin');
+    const existRoot = yield (0, exports.GetAllUsersService)(1, 1, 'admin');
     console.log(`count root: ${existRoot}`);
     const hash = yield (0, passwordUtil_1.encryptPassword)('@Root123');
     if (existRoot.length <= 0) {

@@ -11,10 +11,10 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.DeleteExerciseService = exports.UpdateExerciseService = exports.InsertExerciseService = exports.GetExerciseServiceByName = exports.GetExerciseServiceById = exports.GetAllExerciseService = void 0;
 const exercise_schemas_1 = require("../schemas/exercise.schemas");
-const GetAllExerciseService = (muscleGroupId, limit) => __awaiter(void 0, void 0, void 0, function* () {
+const GetAllExerciseService = (limit, offSet, muscleGroupId) => __awaiter(void 0, void 0, void 0, function* () {
     var filter = {};
     muscleGroupId != undefined ? filter = Object.assign(Object.assign({}, filter), { muscleGroupId: muscleGroupId }) : filter;
-    const res = yield exercise_schemas_1.exerciseModel.find(filter).limit(limit || 10);
+    const res = yield exercise_schemas_1.exerciseModel.find(filter).limit(limit).skip(offSet - 1);
     return res.map(item => ({
         id: item.id,
         name: item.name,

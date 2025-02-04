@@ -20,10 +20,11 @@ const errorUtil_1 = require("../utils/errorUtil");
 const validationUtil_1 = require("../utils/validationUtil");
 const GetAllUsers = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { rol, limit } = req.query;
+        const { rol, limit, offset } = req.query;
         const rolVal = typeof (rol) == 'string' ? rol : undefined;
-        const limitVal = typeof (limit) == 'number' ? Number(limit) : undefined;
-        const userList = yield (0, user_service_1.GetAllUsersService)(rolVal, limitVal);
+        const limitValue = limit != undefined ? Number(limit) : 10;
+        const offsetValue = offset != undefined ? Number(offset) : 1;
+        const userList = yield (0, user_service_1.GetAllUsersService)(limitValue, offsetValue, rolVal);
         res.status(200).send(userList);
     }
     catch (error) {

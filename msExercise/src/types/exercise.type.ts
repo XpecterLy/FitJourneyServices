@@ -6,3 +6,7 @@ export interface exerciseType {
     imageUrl: string;
     details?: string;
 };
+
+export interface exerciseMuscleType {
+    muscle: string;
+}

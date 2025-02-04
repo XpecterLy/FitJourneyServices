@@ -9,19 +9,21 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.DeleteExercise = exports.UpdateExercise = exports.InsertExercise = exports.GetExercise = exports.GetAllExercise = void 0;
+exports.AddExercisesSeed = exports.DeleteExercise = exports.UpdateExercise = exports.InsertExercise = exports.GetExercise = exports.GetAllExercise = void 0;
 const errorUtil_1 = require("../utils/errorUtil");
 const exercise_service_1 = require("../services/exercise.service");
 const validationUtil_1 = require("../utils/validationUtil");
 const muscle_group_api_1 = require("../api/msCategories/muscle-group.api");
 const training_styles_api_1 = require("../api/msCategories/training-styles-api");
+const exercisesSeeds_1 = require("../seeds/exercisesSeeds");
 const GetAllExercise = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { limit, muscleGroupId } = req.query;
-        const limitPage = limit != undefined ? Number(limit) : undefined;
+        const { limit, offset, muscleGroupId } = req.query;
+        const limitValue = limit != undefined ? Number(limit) : 10;
+        const offsetValue = offset != undefined ? Number(offset) : 1;
         if (muscleGroupId != undefined)
             yield (0, muscle_group_api_1.GetMusclegroupIdById)(req.token, muscleGroupId);
-        res.status(200).send(yield (0, exercise_service_1.GetAllExerciseService)(muscleGroupId, limitPage));
+        res.status(200).send(yield (0, exercise_service_1.GetAllExerciseService)(limitValue, offsetValue, muscleGroupId));
     }
     catch (error) {
         (0, errorUtil_1.ErrorException)(res, error);
@@ -80,3 +82,25 @@ const DeleteExercise = (req, res) => __awaiter(void 0, void 0, void 0, function*
     }
 });
 exports.DeleteExercise = DeleteExercise;
+const AddExercisesSeed = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const pechoData = exercisesSeeds_1.exercisesSeed.pechoSeed();
+        const tricepData = exercisesSeeds_1.exercisesSeed.tricepSeed();
+        pechoData.map((item) => __awaiter(void 0, void 0, void 0, function* () {
+            insertExerciseIfNotExist(item);
+        }));
+        tricepData.map((item) => __awaiter(void 0, void 0, void 0, function* () {
+            insertExerciseIfNotExist(item);
+        }));
+        res.status(201).send();
+    }
+    catch (error) {
+        (0, errorUtil_1.ErrorException)(res, error);
+    }
+});
+exports.AddExercisesSeed = AddExercisesSeed;
+const insertExerciseIfNotExist = (exercise) => __awaiter(void 0, void 0, void 0, function* () {
+    const existName = yield (0, exercise_service_1.GetExerciseServiceByName)(exercise.muscleGroupId, exercise.name);
+    if ((0, validationUtil_1.validationObjectIsEmpty)(existName))
+        (0, exercise_service_1.InsertExerciseService)(exercise);
+});

@@ -6,15 +6,19 @@ import { validationObjectIsEmpty } from '../utils/validationUtil';
 import { ErrorType } from '../types/error.type';
 import { GetMusclegroupIdById } from '../api/msCategories/muscle-group.api';
 import { GetTrainingStyleIdById } from '../api/msCategories/training-styles-api';
+import { exercisesSeed } from '../seeds/exercisesSeeds';
 
-export const GetAllExercise = async (req: Request<{}, {}, {}, {limit?: string, muscleGroupId?: string}>, res: Response) => {
+export const GetAllExercise = async (req: Request<{}, {}, {}, {limit?: string, offset?: string, muscleGroupId?: string}>, res: Response) => {
     try {
-        const {limit, muscleGroupId} = req.query;
+        const {limit, offset, muscleGroupId} = req.query;
 
-        const limitPage = limit != undefined ? Number(limit) : undefined;
+        
+        const limitValue = limit != undefined ? Number(limit) : 10;
+        const offsetValue = offset != undefined ? Number(offset) : 1;
+
         if(muscleGroupId != undefined) await GetMusclegroupIdById(req.token, muscleGroupId);
 
-        res.status(200).send(await GetAllExerciseService(muscleGroupId, limitPage));
+        res.status(200).send(await GetAllExerciseService(limitValue, offsetValue, muscleGroupId));
     } catch (error) {
         ErrorException(res, error);
     }
@@ -66,4 +70,28 @@ export const DeleteExercise = async (req: Request<{}, {}, {}, {id: string}>, res
     } catch (error) {
         ErrorException(res, error);
     }
+}
+
+export const AddExercisesSeed = async (req: Request, res: Response) => {
+    try {
+        const pechoData = exercisesSeed.pechoSeed();
+        const tricepData = exercisesSeed.tricepSeed();
+
+        pechoData.map(async item => {
+            insertExerciseIfNotExist(item);
+        });
+        tricepData.map(async item => {
+            insertExerciseIfNotExist(item);
+        });
+
+        res.status(201).send();
+
+    } catch (error) {
+        ErrorException(res, error);
+    }
+}
+
+const insertExerciseIfNotExist = async ( exercise: exerciseType ) => {
+    const existName = await GetExerciseServiceByName(exercise.muscleGroupId, exercise.name);
+    if(validationObjectIsEmpty(existName)) InsertExerciseService(exercise);
 }

@@ -2,8 +2,11 @@ import { routineTrakingModel } from "../schemas/routine_traking.schema"
 import { ErrorType } from "../types/error.type";
 import { response_routine_trakin_type, routine_trakin_type } from "../types/routine_traking.type";
 
-export const getAllRoutinesTrakingService = async (userId: string): Promise<response_routine_trakin_type[]> => {
-    const res = await routineTrakingModel.find({ userId: userId });
+export const getAllRoutinesTrakingService = async (limit: number, offset: number, userId: string, routineId?: string): Promise<response_routine_trakin_type[]> => {
+    const query: any = { userId };
+    if (routineId) query.routineId = routineId;
+    
+    const res = await routineTrakingModel.find(query).limit(limit).skip(offset - 1);
 
     return  res.map( item => ({
         id: item.id,

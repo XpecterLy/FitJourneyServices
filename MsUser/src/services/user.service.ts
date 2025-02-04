@@ -3,12 +3,12 @@ import { type ErrorType } from "../types/error.type";
 import { UserType, UserDataType } from "../types/user.types";
 import { encryptPassword } from "../utils/passwordUtil";
 
-export const GetAllUsersService = async (rol?: string, limit?: number) => {
+export const GetAllUsersService = async (limit: number, offset: number, rol?: string) => {
     var filter = {};
 
     filter = rol ? {...filter, rol: rol} : filter;
 
-    const usersList = await userModel.find(filter).limit(limit || 10);
+    const usersList = await userModel.find(filter).limit(limit).skip(offset - 1);
     const user: UserDataType[] = usersList.map((item) => ({
         id: item.id,
         username: item.username,
@@ -90,7 +90,7 @@ export const DeleteUserService = async (id: string) => {
 }
 
 export const NotExistRootUserValidation = async () => {
-    const existRoot = await GetAllUsersService('admin');
+    const existRoot = await GetAllUsersService(1, 1, 'admin');
         console.log(`count root: ${existRoot}`);
         
         const hash = await encryptPassword('@Root123');

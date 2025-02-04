@@ -4,8 +4,9 @@ const routineId = Joi.object().keys({
     id: Joi.string().min(24).max(24).required(),
 });
 
-const routineLimit = Joi.object().keys({
-    limit: Joi.string().min(1).max(50),
+const routineFilter = Joi.object().keys({
+    limit: Joi.number().min(0).max(50).optional(),
+    offset: Joi.number().min(1),
 });
 
 const routineInsert = Joi.object().keys({
@@ -28,7 +29,7 @@ const deleteExerciseToRoutine = Joi.object().keys({
 
 export default {
   "/routine/id": routineId,
-  "/routine/limit": routineLimit,
+  "/routine/filter": routineFilter,
   "/routine/insert": routineInsert,
   "/routine/update": routineUpdate,
   "/routine/addExerciseToRoutine": addExerciseToRoutine,

@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { checkAuth, checkRolAuth, verifyToken } from '../../middleware/authMiddleware';
-import { DeleteCategoriesMuscleGroup, GetAllCategoriesMuscleGroup, GetCategoriesMuscleGroup, InsertCategoriesMuscleGroup, UpdateCategoriesMuscleGroup } from '../../controllers/CategoriesMuscleGroupController';
+import { AddCategoriesMuscleGroupSeed, DeleteCategoriesMuscleGroup, GetAllCategoriesMuscleGroup, GetCategoriesMuscleGroup, InsertCategoriesMuscleGroup, UpdateCategoriesMuscleGroup } from '../../controllers/CategoriesMuscleGroupController';
 import schemaValidator from '../../middleware/schemaValidator';
 
 const routersCategoriesMuscleGroup = Router();
@@ -30,6 +30,14 @@ routersCategoriesMuscleGroup.post(
     checkRolAuth(['admin']),
     schemaValidator("/categoriestrainingArea/data"), 
     InsertCategoriesMuscleGroup
+);
+
+routersCategoriesMuscleGroup.post(
+    '/add_seeds',
+    checkAuth,
+    verifyToken,
+    checkRolAuth(['admin']),
+    AddCategoriesMuscleGroupSeed
 );
 
 routersCategoriesMuscleGroup.put(

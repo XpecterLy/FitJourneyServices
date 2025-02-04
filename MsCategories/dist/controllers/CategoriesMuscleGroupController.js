@@ -9,15 +9,17 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.DeleteCategoriesMuscleGroup = exports.UpdateCategoriesMuscleGroup = exports.InsertCategoriesMuscleGroup = exports.GetCategoriesMuscleGroup = exports.GetAllCategoriesMuscleGroup = void 0;
+exports.AddCategoriesMuscleGroupSeed = exports.DeleteCategoriesMuscleGroup = exports.UpdateCategoriesMuscleGroup = exports.InsertCategoriesMuscleGroup = exports.GetCategoriesMuscleGroup = exports.GetAllCategoriesMuscleGroup = void 0;
 const errorUtil_1 = require("../utils/errorUtil");
 const validationUtil_1 = require("../utils/validationUtil");
 const categories_muscle_group_service_1 = require("../service/categories-muscle-group.service");
+const categoriesSeeds_1 = require("../seeds/categoriesSeeds");
 const GetAllCategoriesMuscleGroup = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { trainingStylesId, limit } = req.query;
-        const pageLimit = limit != undefined ? Number(limit) : undefined;
-        res.status(200).send(yield (0, categories_muscle_group_service_1.GetAllCategoriesMuscleGroupService)(trainingStylesId, pageLimit));
+        const { trainingStylesId, limit, offset } = req.query;
+        const limitValue = limit != undefined ? Number(limit) : 10;
+        const offsetValue = offset != undefined ? Number(offset) : 1;
+        res.status(200).send(yield (0, categories_muscle_group_service_1.GetAllCategoriesMuscleGroupService)(limitValue, offsetValue, trainingStylesId));
     }
     catch (error) {
         (0, errorUtil_1.ErrorException)(res, error);
@@ -76,3 +78,18 @@ const DeleteCategoriesMuscleGroup = (req, res) => __awaiter(void 0, void 0, void
     }
 });
 exports.DeleteCategoriesMuscleGroup = DeleteCategoriesMuscleGroup;
+const AddCategoriesMuscleGroupSeed = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const categories = categoriesSeeds_1.categoriesSeeds.trainingMuscleGroupSeed();
+        categories.map((item) => __awaiter(void 0, void 0, void 0, function* () {
+            const existName = yield (0, categories_muscle_group_service_1.GetCategoriesMuscleGroupByNameService)(item.name);
+            if ((0, validationUtil_1.validationObjectIsEmpty)(existName))
+                (0, categories_muscle_group_service_1.InsertCategoriesMuscleGroupService)(item);
+        }));
+        res.status(201).send(categories);
+    }
+    catch (error) {
+        (0, errorUtil_1.ErrorException)(res, error);
+    }
+});
+exports.AddCategoriesMuscleGroupSeed = AddCategoriesMuscleGroupSeed;

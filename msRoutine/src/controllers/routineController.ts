@@ -7,11 +7,14 @@ import { ErrorType } from '../types/error.type';
 import { msExercise } from '../api/msExercise.api';
 import { isAxiosError } from 'axios';
 
-export const getAllRoutine = async ( req: Request<{}, {}, {}, {limit: string}>, res: Response ) => {
+export const getAllRoutine = async ( req: Request<{}, {}, {}, {limit: string, offset: string}>, res: Response ) => {
     try {
-        const {limit} = req.query;
-        const limitVar = limit != undefined ? Number(limit) : undefined;
-        res.status(200).send(await getAllRoutineService(req.userId!, limitVar));
+        const {limit, offset} = req.query;
+        
+        const limitValue = limit != undefined ? Number(limit) : 10;
+        const offsetValue = offset != undefined ? Number(offset) : 1;
+
+        res.status(200).send(await getAllRoutineService(limitValue, offsetValue, req.userId!));
     } catch (error) {
         ErrorException(res, error);
     }

@@ -1,6 +1,6 @@
 import express from 'express';
 import { checkAuth, checkRolAuth, verifyToken } from '../../middleware/authMiddleware';
-import { DeleteCategoriesTrainingStyle, GetAllCategoriesTrainingStyles, GetCategoriesTrainingStyle, InsertCategoriesTrainingStyle, UpdateCategoriesTrainingStyle } from '../../controllers/CategoriesTrainingStyleController';
+import { AddCategoriesTrainingStyleSeed, DeleteCategoriesTrainingStyle, GetAllCategoriesTrainingStyles, GetCategoriesTrainingStyle, InsertCategoriesTrainingStyle, UpdateCategoriesTrainingStyle } from '../../controllers/CategoriesTrainingStyleController';
 import schemaValidator from '../../middleware/schemaValidator';
 
 const routesCategoriesTrainingStyles = express.Router();
@@ -30,6 +30,14 @@ routesCategoriesTrainingStyles.post(
     checkRolAuth(['admin']),
     schemaValidator("/categoriestraining/data"), 
     InsertCategoriesTrainingStyle
+);
+
+routesCategoriesTrainingStyles.post(
+    '/add_seeds',
+    checkAuth,
+    verifyToken,
+    checkRolAuth(['admin']),
+    AddCategoriesTrainingStyleSeed
 );
 
 routesCategoriesTrainingStyles.put(

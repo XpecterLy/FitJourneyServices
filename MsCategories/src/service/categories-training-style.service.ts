@@ -2,8 +2,8 @@ import { categoriesTrainingStylesModel } from "../schemas/CategoriesTrainingStyl
 import { CategoriesTrainingStylesType } from "../types/categoriesTrainingStyle.types";
 import { ErrorType } from "../types/error.type";
 
-export const GetAllCategoriesTrainingStylesService = async(limit?: number): Promise<CategoriesTrainingStylesType[]> => {
-    const res = await categoriesTrainingStylesModel.find().limit(limit || 10);
+export const GetAllCategoriesTrainingStylesService = async(limit: number, offset: number): Promise<CategoriesTrainingStylesType[]> => {
+    const res = await categoriesTrainingStylesModel.find().limit(limit).skip(offset - 1);
     const resList: CategoriesTrainingStylesType[] =  res.map((item) => ({
         id: item.id,
         name: item.name || '',

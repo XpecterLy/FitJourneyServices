@@ -9,10 +9,10 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteRoutineService = exports.updateRoutineService = exports.insertRoutineService = exports.getRoutineServiceByName = exports.getRoutineServiceById = exports.getAllRoutineService = void 0;
+exports.deleteRoutineService = exports.addExerciseToRoutineService = exports.updateRoutineService = exports.insertRoutineService = exports.getRoutineByNameService = exports.deleteExercisesFromRoutineByIdService = exports.getRoutineByIdAndByExerciseIdService = exports.getRoutineByIdService = exports.getAllRoutineService = void 0;
 const routineScheme_1 = require("../schemes/routineScheme");
-const getAllRoutineService = (userId, limit) => __awaiter(void 0, void 0, void 0, function* () {
-    const res = yield routineScheme_1.routineModel.find({ userId: userId }).limit(limit || 10);
+const getAllRoutineService = (limit, offset, userId) => __awaiter(void 0, void 0, void 0, function* () {
+    const res = yield routineScheme_1.routineModel.find({ userId: userId }).limit(limit).skip(offset - 1);
     return res.map(item => ({
         id: item.id,
         name: item.name,
@@ -21,7 +21,7 @@ const getAllRoutineService = (userId, limit) => __awaiter(void 0, void 0, void 0
     }));
 });
 exports.getAllRoutineService = getAllRoutineService;
-const getRoutineServiceById = (id) => __awaiter(void 0, void 0, void 0, function* () {
+const getRoutineByIdService = (id) => __awaiter(void 0, void 0, void 0, function* () {
     const res = yield routineScheme_1.routineModel.findById(id);
     if (res == null)
         throw { code: 404, message: 'routine not found' };
@@ -32,8 +32,35 @@ const getRoutineServiceById = (id) => __awaiter(void 0, void 0, void 0, function
         dateCreate: res.dateCreate
     };
 });
-exports.getRoutineServiceById = getRoutineServiceById;
-const getRoutineServiceByName = (name, userId) => __awaiter(void 0, void 0, void 0, function* () {
+exports.getRoutineByIdService = getRoutineByIdService;
+const getRoutineByIdAndByExerciseIdService = (id, exercises) => __awaiter(void 0, void 0, void 0, function* () {
+    const res = yield routineScheme_1.routineModel.findOne({ _id: id, exercises: exercises });
+    console.log(res);
+    if (res == null)
+        return null;
+    return {
+        id: res.id,
+        name: res.name,
+        exercises: res.exercises,
+        dateCreate: res.dateCreate
+    };
+});
+exports.getRoutineByIdAndByExerciseIdService = getRoutineByIdAndByExerciseIdService;
+const deleteExercisesFromRoutineByIdService = (id, oldData, exercises) => __awaiter(void 0, void 0, void 0, function* () {
+    oldData.exercises = oldData.exercises.filter(item => !exercises.includes(item));
+    const res = yield routineScheme_1.routineModel.updateOne({ _id: id }, oldData);
+    console.log(res);
+    if (res == null)
+        return null;
+    return {
+        id: oldData.id,
+        name: oldData.name,
+        exercises: oldData.exercises,
+        dateCreate: oldData.dateCreate
+    };
+});
+exports.deleteExercisesFromRoutineByIdService = deleteExercisesFromRoutineByIdService;
+const getRoutineByNameService = (name, userId) => __awaiter(void 0, void 0, void 0, function* () {
     var filter = {};
     filter = (userId != undefined) ?
         {
@@ -53,7 +80,7 @@ const getRoutineServiceByName = (name, userId) => __awaiter(void 0, void 0, void
         dateCreate: res.dateCreate
     };
 });
-exports.getRoutineServiceByName = getRoutineServiceByName;
+exports.getRoutineByNameService = getRoutineByNameService;
 const insertRoutineService = (data) => __awaiter(void 0, void 0, void 0, function* () {
     const newRoutine = new routineScheme_1.routineModel(data);
     const res = yield newRoutine.save();
@@ -81,6 +108,17 @@ const updateRoutineService = (id, oldData, newData) => __awaiter(void 0, void 0,
     };
 });
 exports.updateRoutineService = updateRoutineService;
+const addExerciseToRoutineService = (id, oldData, newExercises) => __awaiter(void 0, void 0, void 0, function* () {
+    newExercises.map(item => (oldData.exercises.push(item)));
+    yield routineScheme_1.routineModel.updateOne({ _id: id }, { exercises: oldData.exercises });
+    return {
+        id: id,
+        name: oldData.name,
+        exercises: oldData.exercises,
+        dateCreate: oldData.dateCreate
+    };
+});
+exports.addExerciseToRoutineService = addExerciseToRoutineService;
 const deleteRoutineService = (id) => __awaiter(void 0, void 0, void 0, function* () {
     const res = yield routineScheme_1.routineModel.deleteOne({ _id: id });
     if (res.deletedCount <= 0)

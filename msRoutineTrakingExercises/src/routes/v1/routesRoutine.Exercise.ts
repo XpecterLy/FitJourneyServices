@@ -1,6 +1,6 @@
 import {Router} from 'express';
 import schemaValidator from '../../middleware/schemaValidator';
-import { deleteRoutineTrakingExercise, getAllRoutineTrakingExercise, getRoutineTrakingExercise, insertRoutineTrakingExercise, updateRoutineTrakingExercise } from '../../controllers/routine.ExerciseController';
+import { addSerieRoutineTrakingExercise, deleteRoutineTrakingExercise, getAllRoutineTrakingExercise, getRoutineTrakingExercise, insertRoutineTrakingExercise } from '../../controllers/routine.ExerciseController';
 import { checkAuth, checkRolAuth, verifyToken } from '../../middleware/authMiddleware';
 
 export const routerRoutineExercise = Router();
@@ -32,16 +32,6 @@ routerRoutineExercise.post(
     insertRoutineTrakingExercise
 );
 
-routerRoutineExercise.put(
-    '/',
-    checkAuth,
-    verifyToken,
-    checkRolAuth(['admin', 'user']),
-    schemaValidator('/routineExer/id', true, 'query'),
-    schemaValidator('/routineExer/update'),
-    updateRoutineTrakingExercise
-);
-
 routerRoutineExercise.delete(
     '/',
     checkAuth,
@@ -49,4 +39,14 @@ routerRoutineExercise.delete(
     checkRolAuth(['admin', 'user']),
     schemaValidator('/routineExer/id', true, 'query'),
     deleteRoutineTrakingExercise
+);
+
+routerRoutineExercise.post(
+    '/add_serie',
+    checkAuth,
+    verifyToken,
+    checkRolAuth(['admin', 'user']),
+    schemaValidator('/routineExer/id', true, 'query'),
+    schemaValidator('/routineExer/add_serie'),
+    addSerieRoutineTrakingExercise
 );

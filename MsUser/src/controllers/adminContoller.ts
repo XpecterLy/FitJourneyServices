@@ -7,13 +7,15 @@ import mongoose from 'mongoose';
 import { ErrorException } from '../utils/errorUtil';
 import { validationObjectIsEmpty } from '../utils/validationUtil';
 
-export const GetAllUsers = async (req: Request<{}, {}, {}, {rol?: string, limit?: number }>, res: Response) => {
+export const GetAllUsers = async (req: Request<{}, {}, {}, {rol?: string, limit: string, offset: string }>, res: Response) => {
   try {
-      const {rol, limit} = req.query;
+      const {rol, limit, offset} = req.query;
 
       const rolVal = typeof(rol) == 'string' ? rol : undefined;
-      const limitVal = typeof(limit) == 'number' ? Number(limit) : undefined;
-      const userList = await GetAllUsersService(rolVal, limitVal);
+      const limitValue = limit != undefined ? Number(limit) : 10;
+      const offsetValue = offset != undefined ? Number(offset) : 1;
+
+      const userList = await GetAllUsersService(limitValue, offsetValue, rolVal);
       res.status(200).send(userList);
   } catch (error) {
       ErrorException(res, error);

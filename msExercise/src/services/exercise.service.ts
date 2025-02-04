@@ -1,9 +1,11 @@
-import { string } from "joi";
+import { log } from "console";
 import { exerciseModel } from "../schemas/exercise.schemas"
 import { ErrorType } from "../types/error.type";
 import { exerciseType } from "../types/exercise.type";
 
-export const GetAllExerciseService = async (muscleGroupId?: string, limit?: number): Promise<exerciseType[]> => {
+export const GetAllExerciseService = async (limit: number, offSet: number, muscleGroupId?: string): Promise<exerciseType[]> => {
+
+    
 
     var filter = {};
 
@@ -12,7 +14,7 @@ export const GetAllExerciseService = async (muscleGroupId?: string, limit?: numb
         muscleGroupId: muscleGroupId
     } : filter;
 
-    const res = await exerciseModel.find(filter).limit(limit || 10);
+    const res = await exerciseModel.find(filter).limit(limit).skip(offSet - 1);
     return res.map( item => ({
         id: item.id,
         name: item.name,

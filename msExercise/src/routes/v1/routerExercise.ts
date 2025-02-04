@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { checkAuth, checkRolAuth, verifyToken } from '../../middleware/authMiddleware';
 import schemaValidator from '../../middleware/schemaValidator';
-import { DeleteExercise, GetAllExercise, GetExercise, InsertExercise, UpdateExercise } from '../../controller/exerciseController';
+import { AddExercisesSeed, DeleteExercise, GetAllExercise, GetExercise, InsertExercise, UpdateExercise } from '../../controller/exerciseController';
 
 const routersExercise = Router();
 
@@ -27,9 +27,17 @@ routersExercise.post(
     '/',
     checkAuth,
     verifyToken,
-    checkRolAuth(['admin',]),
+    checkRolAuth(['admin']),
     schemaValidator('/excercise/register'),
     InsertExercise
+);
+
+routersExercise.post(
+    '/add_seed',
+    checkAuth,
+    verifyToken,
+    checkRolAuth(['admin']),
+    AddExercisesSeed
 );
 
 routersExercise.put(
@@ -50,7 +58,5 @@ routersExercise.delete(
     schemaValidator('/excercise/id', true, 'query'),
     DeleteExercise
 );
-
-
 
 export default routersExercise;

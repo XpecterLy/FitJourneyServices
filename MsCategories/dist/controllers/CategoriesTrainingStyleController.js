@@ -9,15 +9,17 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.DeleteCategoriesTrainingStyle = exports.UpdateCategoriesTrainingStyle = exports.InsertCategoriesTrainingStyle = exports.GetCategoriesTrainingStyle = exports.GetAllCategoriesTrainingStyles = void 0;
+exports.AddCategoriesTrainingStyleSeed = exports.DeleteCategoriesTrainingStyle = exports.UpdateCategoriesTrainingStyle = exports.InsertCategoriesTrainingStyle = exports.GetCategoriesTrainingStyle = exports.GetAllCategoriesTrainingStyles = void 0;
 const categories_training_style_service_1 = require("../service/categories-training-style.service");
 const errorUtil_1 = require("../utils/errorUtil");
 const validationUtil_1 = require("../utils/validationUtil");
+const categoriesSeeds_1 = require("../seeds/categoriesSeeds");
 const GetAllCategoriesTrainingStyles = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { limit } = req.query;
-        const pageLimit = limit != undefined ? Number(limit) : undefined;
-        res.status(200).send(yield (0, categories_training_style_service_1.GetAllCategoriesTrainingStylesService)(pageLimit));
+        const { limit, offset } = req.query;
+        const limitValue = limit != undefined ? Number(limit) : 10;
+        const offsetValue = offset != undefined ? Number(offset) : 1;
+        res.status(200).send(yield (0, categories_training_style_service_1.GetAllCategoriesTrainingStylesService)(limitValue, offsetValue));
     }
     catch (error) {
         (0, errorUtil_1.ErrorException)(res, error);
@@ -77,3 +79,18 @@ const DeleteCategoriesTrainingStyle = (req, res) => __awaiter(void 0, void 0, vo
     }
 });
 exports.DeleteCategoriesTrainingStyle = DeleteCategoriesTrainingStyle;
+const AddCategoriesTrainingStyleSeed = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const categories = categoriesSeeds_1.categoriesSeeds.trainingStyleSeed();
+        categories.map((item) => __awaiter(void 0, void 0, void 0, function* () {
+            const existName = yield (0, categories_training_style_service_1.GetCategoriesTrainingStylesByNameService)(item.name);
+            if ((0, validationUtil_1.validationObjectIsEmpty)(existName))
+                (0, categories_training_style_service_1.InsertCategoriesTrainingStylesService)(item);
+        }));
+        res.status(201).send(categories);
+    }
+    catch (error) {
+        (0, errorUtil_1.ErrorException)(res, error);
+    }
+});
+exports.AddCategoriesTrainingStyleSeed = AddCategoriesTrainingStyleSeed;

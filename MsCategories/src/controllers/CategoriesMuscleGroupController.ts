@@ -4,14 +4,15 @@ import { validationObjectIsEmpty } from '../utils/validationUtil';
 import { ErrorType } from '../types/error.type';
 import { DeleteCategoriesMuscleGroupService, GetAllCategoriesMuscleGroupService, GetCategoriesMuscleGroupByIdService, GetCategoriesMuscleGroupByNameService, InsertCategoriesMuscleGroupService, UpdateCategoriesMuscleGroupService } from '../service/categories-muscle-group.service';
 import { CategoriesMuscleGroupType } from '../types/categoriesMuscleGroup.types';
-import { GetCategoriesTrainingStylesByIdService } from '../service/categories-training-style.service';
+import { categoriesSeeds } from '../seeds/categoriesSeeds';
 
-export const GetAllCategoriesMuscleGroup = async(req: Request<{}, {}, {}, {trainingStylesId: string, limit: string}>, res: Response) => {
+export const GetAllCategoriesMuscleGroup = async(req: Request<{}, {}, {}, {trainingStylesId: string, limit: string, offset?: string}>, res: Response) => {
     try {
-        const {trainingStylesId, limit} = req.query;
-        const pageLimit = limit != undefined ? Number(limit) : undefined;
+        const {trainingStylesId, limit, offset} = req.query;
+        const limitValue = limit != undefined ? Number(limit) : 10;
+        const offsetValue = offset != undefined ? Number(offset) : 1;
 
-        res.status(200).send(await GetAllCategoriesMuscleGroupService(trainingStylesId, pageLimit));
+        res.status(200).send(await GetAllCategoriesMuscleGroupService(limitValue, offsetValue, trainingStylesId));
     } catch (error) {
         ErrorException(res, error);
     }
@@ -66,6 +67,20 @@ export const DeleteCategoriesMuscleGroup = async(req: Request<{}, {}, {}, {id: s
         await GetCategoriesMuscleGroupByIdService(id);
         await DeleteCategoriesMuscleGroupService(id);
         res.status(200).send();
+    } catch (error) {
+        ErrorException(res, error);
+    }
+}
+
+export const AddCategoriesMuscleGroupSeed = async (req: Request, res: Response) => {
+    try {
+        const categories = categoriesSeeds.trainingMuscleGroupSeed();
+        categories.map(async item => {
+            const existName = await GetCategoriesMuscleGroupByNameService(item.name);
+            if(validationObjectIsEmpty(existName)) InsertCategoriesMuscleGroupService(item);
+        });
+
+        res.status(201).send(categories);
     } catch (error) {
         ErrorException(res, error);
     }

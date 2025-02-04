@@ -26,9 +26,11 @@ const CategoriesTrainingSchemaId = joi_1.default.object().keys({
 const CategoriesTrainingAreaFilter = joi_1.default.object().keys({
     trainingStylesId: joi_1.default.string().min(24).max(24).optional(),
     limit: joi_1.default.number().min(1).max(50).optional(),
+    offset: joi_1.default.number().min(1).optional(),
 });
 const CategoriesTrainingLimitSchema = joi_1.default.object().keys({
     limit: joi_1.default.number().min(1).max(50).optional(),
+    offset: joi_1.default.number().min(1).optional(),
 });
 exports.default = {
     "/categoriestrainingArea/filter": CategoriesTrainingAreaFilter,

@@ -29,6 +29,7 @@ const userGet = Joi.object().keys({
 const userGetAllFilter = Joi.object().keys({
   rol: Joi.string().min(4).max(5).optional().valid("admin", "user"),
   limit: Joi.number().min(0).max(50).optional(),
+  offset: Joi.number().min(1)
 });
 
 export default {

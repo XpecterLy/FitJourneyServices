@@ -10,7 +10,7 @@ routeRoutine.get(
     checkAuth,
     verifyToken,
     checkRolAuth(['admin', 'user']),
-    schemaValidator('/routine/limit', true, 'query'),
+    schemaValidator('/routine/filter', true, 'query'),
     getAllRoutine
 );
 

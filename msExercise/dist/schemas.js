@@ -10,6 +10,7 @@ const ExerciseIdSchema = joi_1.default.object().keys({
 const ExerciseFilterSchema = joi_1.default.object().keys({
     muscleGroupId: joi_1.default.string().min(24).max(24).optional(),
     limit: joi_1.default.string().min(0).max(50).optional(),
+    offset: joi_1.default.string().min(1).optional(),
 });
 const ExerciseRegisterSchema = joi_1.default.object().keys({
     name: joi_1.default.string().min(1).max(50).required(),

@@ -60,6 +60,7 @@ function verifyToken(req, res, next) {
         req.username = decoded.username;
         req.email = decoded.email;
         req.rol = decoded.rol;
+        req.token = token;
         next();
     }
     catch (error) {

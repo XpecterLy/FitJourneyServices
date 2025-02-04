@@ -1,5 +1,11 @@
 import Joi, { ObjectSchema } from "joi";
 
+const filter = Joi.object().keys({
+  limit: Joi.number().min(0).max(50),
+  offset: Joi.number().min(1),
+  routineId: Joi.string().min(24).max(24)
+});
+
 const validateId = Joi.object().keys({
   id: Joi.string().min(24).max(24).required(),
 });
@@ -14,6 +20,7 @@ const routineTrakingUpdate = Joi.object().keys({
 });
 
 export default {
+  '/routineTraking/filter': filter,
   "/routineTraking/id": validateId,
   "/routineTraking/insert": routineTrakingInsert,
   "/routineTraking/update": routineTrakingUpdate,

@@ -1,8 +1,9 @@
 import { RoutineExerciseModel } from "../shemas/RoutineExercise.schema"
 import { ErrorType } from "../types/error.type";
-import { ResRoutineExerciseType, RoutineExerciseType } from "../types/RoutineExercise.type"
+import { ResRoutineExerciseType, RoutineExerciseType } from "../types/RoutineTrakingExercise.type"
+import { getCurrentDate } from "../utils/dateUntil";
 
-export const getAllRoutineTrakingExerciseService = async (userId: string, limit?: number, routineTrakingId?: string): Promise<ResRoutineExerciseType[]> => {
+export const getAllRoutineTrakingExerciseService = async (limit: number, offset: number, userId: string, routineTrakingId?: string): Promise<ResRoutineExerciseType[]> => {
     var filter = {};
 
     filter = routineTrakingId != undefined ? 
@@ -14,15 +15,22 @@ export const getAllRoutineTrakingExerciseService = async (userId: string, limit?
         userId: userId
     }
 
-    const res = await RoutineExerciseModel.find(filter).limit(limit || 10);
+    const res = await RoutineExerciseModel.find(filter).limit(limit).skip(offset - 1);
+
+    console.log(res);
+    
+
     return res.map(item => ({
         id: item.id,
         routineTrakingId: item.routineTrakingId,
         exerciseId: item.exerciseId,
-        series: item.series,
-        repetitions: item.repetitions,
-        weight: item.weight,
-        time: item.time,
+        series: item.series.map(serie => ({
+            repetitions: serie.repetitions,
+            weight: serie.weight,
+            time: serie.time,
+            dateCreate: serie.dateCreate,
+        }))
+        
     } as ResRoutineExerciseType))
 }
 
@@ -35,10 +43,12 @@ export const getRoutineTrakingExerciseByIdService = async (userId: string, id: s
         id: res.id,
         routineTrakingId: res.routineTrakingId,
         exerciseId: res.exerciseId,
-        series: res.series,
-        repetitions: res.repetitions,
-        weight: res.weight,
-        time: res.time,
+        series: (res.series) ? res.series.map(item => ({
+            repetitions: item.repetitions,
+            weight: item.weight,
+            time: item.time,
+            dateCreate: item.dateCreate
+        })) : {}
     } as ResRoutineExerciseType;
 }
 
@@ -56,20 +66,20 @@ export const getRoutineTrakingExerciseByRoutineAndExerciseService = async ( user
         id: res.id,
         routineTrakingId: res.routineTrakingId,
         exerciseId: res.exerciseId,
-        series: res.series,
-        repetitions: res.repetitions,
-        weight: res.weight,
-        time: res.time,
+        series: (res.series) ? res.series.map(item => ({
+            repetitions: item.repetitions,
+            weight: item.weight,
+            time: item.time,
+            dateCreate: item.dateCreate
+        })) : {}
     } as ResRoutineExerciseType;
 }
 
 export const insertRoutineTrakingExerciseService = async (data: RoutineExerciseType): Promise<ResRoutineExerciseType> => {
     const newVal = new RoutineExerciseModel({
         ...data,
-        series: data.series != undefined ? data.series : 0,
-        repetitions: data.repetitions != undefined ? data.repetitions : 0,
-        weight: data.weight != undefined ? data.weight : 0,
-        time: data.time != undefined ? data.time : 0
+        series: []
+
     });
     const res = await newVal.save();
     if (!res) throw { code: 400, message: 'routine_exercise is not insert' } as ErrorType;
@@ -78,34 +88,7 @@ export const insertRoutineTrakingExerciseService = async (data: RoutineExerciseT
         id: newVal.id,
         routineTrakingId: data.routineTrakingId,
         exerciseId: data.exerciseId,
-        series: data.series,
-        repetitions: data.repetitions,
-        weight: data.weight,
-        time: data.time,
-    } as ResRoutineExerciseType;
-}
-
-export const updateRoutineTrakingExerciseService = async (id: string, oldData: ResRoutineExerciseType, newData: RoutineExerciseType): Promise<ResRoutineExerciseType> => {
-    const data = {
-        routineTrakingId: (newData.routineTrakingId != undefined ) ? newData.routineTrakingId : oldData.routineTrakingId,
-        exerciseId: (newData.exerciseId != undefined ) ? newData.exerciseId : oldData.exerciseId,
-        series: (newData.series != undefined ) ? newData.series : oldData.series,
-        repetitions: (newData.repetitions != undefined ) ? newData.repetitions : oldData.repetitions,
-        weight: (newData.weight != undefined ) ? newData.weight : oldData.weight,
-        time: (newData.time != undefined ) ? newData.time : oldData.time,
-    } as ResRoutineExerciseType;
-
-    const res = await RoutineExerciseModel.updateOne({_id: id}, data);
-
-    return {
-        id: id,
-        routineTrakingId: data.routineTrakingId,
-        exerciseId: data.exerciseId,
-        series: data.series,
-        repetitions: data.repetitions,
-        weight: data.weight,
-        time: data.time,
-
+        series: []
     } as ResRoutineExerciseType;
 }
 
@@ -113,4 +96,26 @@ export const deleteRoutineTrakingExerciseService = async (id: string) => {
     const res = await RoutineExerciseModel.deleteOne({_id: id});
 
     if (res.deletedCount <= 0) throw { code: 400, message: 'routine_exercise is not delete' } as ErrorType;
+}
+
+export const addSerieRoutineTrakingExerciseService = async (id: string, oldData: ResRoutineExerciseType, newData: RoutineExerciseType) => {
+    newData.series.map(item => {
+        item.repetitions = (item.repetitions) ? item.repetitions : 0;
+        item.weight = (item.weight) ? item.weight : 0;
+        item.time = (item.time) ? item.time : 0;
+        item.dateCreate = getCurrentDate();
+
+        oldData.series.push(item)
+    });
+    
+    const res = await RoutineExerciseModel.updateOne({_id: id}, {series: oldData.series});
+
+    if(res.modifiedCount == 0) throw {code: 400, message: 'serie is not added'} as ErrorType;
+
+    return {
+        id: id,
+        routineTrakingId: oldData.routineTrakingId,
+        exerciseId: oldData.exerciseId,
+        series: oldData.series
+    } as RoutineExerciseType;
 }

@@ -1,35 +1,33 @@
 import Joi, { ObjectSchema } from "joi";
 
-const rouExceFilterLimit = Joi.object().keys({
+const rouExceFilter= Joi.object().keys({
     limit: Joi.number().min(0).max(50),
+    offset: Joi.number().min(1),
     routineTrakingId: Joi.string().min(24).max(24),
 });
 
 const rouExceId = Joi.object().keys({
     id: Joi.string().min(24).max(6240).required(),
 });
-
-const rouExceInsert = Joi.object().keys({
-  routineTrakingId: Joi.string().min(24).max(24).required(),
-  exerciseId: Joi.string().min(24).max(24).required(),
-  series: Joi.string().min(0).max(300),
-  repetitions: Joi.string().min(0).max(500),
-  weight: Joi.string().min(0).max(6240),
-  time: Joi.string().min(0).max(6240),
+const rouExceInsert = Joi.object({
+  routineTrakingId: Joi.string().length(24).required(),
+  exerciseId: Joi.string().length(24).required()
 });
 
-const rouExceUpdate = Joi.object().keys({
-  routineTrakingId: Joi.string().min(24).max(24),
-  exerciseId: Joi.string().min(24).max(24),
-  series: Joi.string().min(0).max(300),
-  repetitions: Joi.string().min(0).max(500),
-  weight: Joi.string().min(0).max(6240),
-  time: Joi.string().min(0).max(6240),
+const seriesTypeSchema = Joi.object({
+  repetitions: Joi.number().min(0).max(500),
+  weight: Joi.number().min(0).max(6240),
+  time: Joi.number().min(0).max(6240),
+});
+
+
+const addSerie = Joi.object({
+  series: Joi.array().items(seriesTypeSchema).required(),
 });
 
 export default {
-  "/routineExer/filter": rouExceFilterLimit,
+  "/routineExer/filter": rouExceFilter,
   "/routineExer/id": rouExceId,
   "/routineExer/insert": rouExceInsert,
-  "/routineExer/update": rouExceUpdate,
+  "/routineExer/add_serie": addSerie,
 } as { [key: string]: ObjectSchema };

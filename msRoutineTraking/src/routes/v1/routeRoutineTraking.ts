@@ -9,6 +9,7 @@ routerRoutineTraking.get(
     checkAuth,
     verifyToken,
     checkRolAuth(['admin', 'user']),
+    schemaValidator("/routineTraking/filter", true, "query"), 
     getAllRoutinesTraking
 );
 
