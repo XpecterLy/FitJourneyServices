@@ -4,8 +4,8 @@
   "description": "FitJourney back end",
   "main": "index.js",
   "scripts": {
-    "start": "node ./dist/app.js",
-    "build": "tsc",
+    "build": "npx tsc",
+    "start": "npm run build && node dist/app.js",
     "dev": "ts-node-dev --respawn --transpile-only ./src/app.ts"
   },
   "keywords": [],

@@ -27,7 +27,7 @@ const auth = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
             rol: user.rol,
         };
         const token = createToken(dataUserToken);
-        res.status(200).json({ token });
+        res.status(200).json({ user: dataUserToken, token });
     }
     catch (error) {
         (0, errorsUtil_1.ErrorException)(res, error);
