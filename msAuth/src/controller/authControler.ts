@@ -29,12 +29,17 @@ export const auth = async (req: Request, res: Response) => {
   }
 };
 
-export const checkToken = async (req: Request<{}, {}, {token: string}, {}>, res: Response) => {
-  const { token } = req.body;
-
+export const checkToken = async (req: Request<{}, {}, {}, {}>, res: Response) => {
+  const token = req.headers['authorization'];
+  console.log(token);
+  
     try {
+      if(token === undefined){
+        res.status(401).send({ message: 'Token not found' });
+      }else {
         jwt.verify( token, process.env.SECRET_KEY );
         res.status(200).send({token});
+      }
     } catch (error) {
       
       if (error instanceof jwt.TokenExpiredError) {
