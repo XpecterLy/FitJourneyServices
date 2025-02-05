@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.auth = void 0;
+exports.checkToken = exports.auth = void 0;
 const jwt = require('jsonwebtoken');
 const errorsUtil_1 = require("../utils/errorsUtil");
 const passwordUtil_1 = require("../types/passwordUtil");
@@ -34,6 +34,28 @@ const auth = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     }
 });
 exports.auth = auth;
+const checkToken = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { token } = req.body;
+    try {
+        jwt.verify(token, process.env.SECRET_KEY);
+        res.status(200).send({ token });
+    }
+    catch (error) {
+        if (error instanceof jwt.TokenExpiredError) {
+            res.status(401).send({ message: 'Token expired' });
+        }
+        else if (error instanceof jwt.JsonWebTokenError) {
+            res.status(401).send({ message: 'Invalid token' });
+        }
+        else if (error instanceof jwt.NotBeforeError) {
+            res.status(401).send({ message: 'Token not active yet' });
+        }
+        else {
+            res.status(500).send({ message: 'Internal server error.' });
+        }
+    }
+});
+exports.checkToken = checkToken;
 // Create token with the data
 const createToken = (data) => {
     try {

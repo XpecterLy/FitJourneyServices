@@ -9,6 +9,10 @@ const authValidationScheme = joi_1.default.object().keys({
     username: joi_1.default.string().min(6).max(60).required(),
     password: joi_1.default.string().pattern(new RegExp(PASSWORD_REGEX)).required(),
 });
+const checkAuthScheme = joi_1.default.object().keys({
+    token: joi_1.default.string().required(),
+});
 exports.default = {
-    "/user/auth": authValidationScheme,
+    "/auth": authValidationScheme,
+    "/auth/check_auth": checkAuthScheme,
 };

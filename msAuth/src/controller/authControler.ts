@@ -29,6 +29,28 @@ export const auth = async (req: Request, res: Response) => {
   }
 };
 
+export const checkToken = async (req: Request<{}, {}, {token: string}, {}>, res: Response) => {
+  const { token } = req.body;
+
+    try {
+        jwt.verify( token, process.env.SECRET_KEY );
+        res.status(200).send({token});
+    } catch (error) {
+      
+      if (error instanceof jwt.TokenExpiredError) {
+        res.status(401).send({ message: 'Token expired' });
+      }
+      else if (error instanceof jwt.JsonWebTokenError) {
+        res.status(401).send({ message: 'Invalid token' });
+      }
+      else if (error instanceof jwt.NotBeforeError) {
+        res.status(401).send({ message: 'Token not active yet' });
+      } else {
+        res.status(500).send({ message: 'Internal server error.' });
+      }
+    }
+}
+
 // Create token with the data
 const createToken = (data: object) => {
   try {

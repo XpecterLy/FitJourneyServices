@@ -14,6 +14,4 @@ COPY . .
 
 EXPOSE 3000
 
-RUN npx tsc
-
 CMD ["node", "dist/app.js"]  
