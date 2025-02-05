@@ -4,8 +4,8 @@ import 'dotenv/config'
 import { authRoutes } from './routes/routes';
 import { connectToDatabase } from './config/db';
 
-
 const app = express();
+
 app.use(express.json());
 
 const port = process.env.PORT || 3000;

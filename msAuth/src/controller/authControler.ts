@@ -23,7 +23,7 @@ export const auth = async (req: Request, res: Response) => {
 
     const token = createToken(dataUserToken);
 
-    res.status(200).json({ token });
+    res.status(200).json({ user: dataUserToken, token });
   } catch (error) {
     ErrorException(res, error);
   }
