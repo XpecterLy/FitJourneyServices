@@ -5,4 +5,4 @@ import schemaValidator from '../../middleware/schemaValidator';
 export const routesAuth = Router();
 
 routesAuth.post('/', schemaValidator("/auth"), auth);
-routesAuth.post('/check-status', checkToken);
+routesAuth.get('/check-status', checkToken);
