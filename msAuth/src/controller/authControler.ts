@@ -31,8 +31,6 @@ export const auth = async (req: Request, res: Response) => {
 
 export const checkToken = async (req: Request<{}, {}, {}, {}>, res: Response) => {
   const token = req.headers['authorization'];
-  console.log(token);
-  
     try {
       if(token === undefined){
         res.status(401).send({ message: 'Token not found' });
