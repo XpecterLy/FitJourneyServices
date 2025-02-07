@@ -36,7 +36,6 @@ const auth = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
 exports.auth = auth;
 const checkToken = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const token = req.headers['authorization'];
-    console.log(token);
     try {
         if (token === undefined) {
             res.status(401).send({ message: 'Token not found' });

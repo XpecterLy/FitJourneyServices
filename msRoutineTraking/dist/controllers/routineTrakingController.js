@@ -17,10 +17,10 @@ const routine_api_1 = require("../api/routine.api");
 const getAllRoutinesTraking = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const userId = req.userId;
-        const { limit, offset, routineId } = req.query;
+        const { limit, offset, routineId, state } = req.query;
         const limitValue = limit != undefined ? Number(limit) : 10;
         const offsetValue = offset != undefined ? Number(offset) : 1;
-        res.status(200).send(yield (0, routine_traking_service_1.getAllRoutinesTrakingService)(limitValue, offsetValue, userId, routineId));
+        res.status(200).send(yield (0, routine_traking_service_1.getAllRoutinesTrakingService)(limitValue, offsetValue, userId, routineId, state));
     }
     catch (error) {
         (0, errorUtil_1.ErrorException)(res, error);

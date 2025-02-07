@@ -11,10 +11,12 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.deleteRoutineTrakingByIdService = exports.updateRoutineTrakingByIdService = exports.InsertRoutineTrakingServise = exports.getRoutineTrakingByIdService = exports.getAllRoutinesTrakingService = void 0;
 const routine_traking_schema_1 = require("../schemas/routine_traking.schema");
-const getAllRoutinesTrakingService = (limit, offset, userId, routineId) => __awaiter(void 0, void 0, void 0, function* () {
+const getAllRoutinesTrakingService = (limit, offset, userId, routineId, state) => __awaiter(void 0, void 0, void 0, function* () {
     const query = { userId };
     if (routineId)
         query.routineId = routineId;
+    if (state)
+        query.state = state;
     const res = yield routine_traking_schema_1.routineTrakingModel.find(query).limit(limit).skip(offset - 1);
     return res.map(item => ({
         id: item.id,

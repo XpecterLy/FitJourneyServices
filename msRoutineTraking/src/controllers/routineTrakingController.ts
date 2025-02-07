@@ -6,15 +6,15 @@ import { getCurrentDate } from "../utils/dateUntil";
 import { routineApi } from "../api/routine.api";
 
 
-export const getAllRoutinesTraking = async (req: Request<{}, {}, {}, {limit: string, offset: string, routineId: string}>, res: Response) => {
+export const getAllRoutinesTraking = async (req: Request<{}, {}, {}, {limit: string, offset: string, routineId: string, state?: string}>, res: Response) => {
     try {
         const userId = req.userId;
-        const {limit, offset, routineId} = req.query;
+        const {limit, offset, routineId, state} = req.query;
 
         const limitValue = limit != undefined ? Number(limit) : 10;
         const offsetValue = offset != undefined ? Number(offset) : 1;
 
-        res.status(200).send(await getAllRoutinesTrakingService(limitValue, offsetValue, userId!, routineId));
+        res.status(200).send(await getAllRoutinesTrakingService(limitValue, offsetValue, userId!, routineId, state));
     } catch (error) {
         ErrorException(res, error);    
     }
