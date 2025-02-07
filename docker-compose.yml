@@ -71,6 +71,7 @@ services:
       - mongo_data:/data/db
     logging:
       driver: none
+    restart: always
 
 volumes:
   mongo_data:

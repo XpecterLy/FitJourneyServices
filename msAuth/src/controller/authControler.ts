@@ -35,8 +35,17 @@ export const checkToken = async (req: Request<{}, {}, {}, {}>, res: Response) =>
       if(token === undefined){
         res.status(401).send({ message: 'Token not found' });
       }else {
-        jwt.verify( token, process.env.SECRET_KEY );
-        res.status(200).send({token});
+        const decode = jwt.verify( token, process.env.SECRET_KEY );
+
+        const dataUserToken = {
+          id: decode.id,
+          username: decode.username,
+          email: decode.email,
+          rol: decode.rol,
+        };
+    
+
+        res.status(200).send({user: dataUserToken, token});
       }
     } catch (error) {
       
