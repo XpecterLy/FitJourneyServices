@@ -61,3 +61,9 @@ export const deleteRoutineTrakingByIdService = async (userId: string, routineTra
     const res = await routineTrakingModel.deleteOne({ _id: routineTrakingId, userId: userId });
     if(res.deletedCount === 0) throw { code: 400, message: 'Routine traking is delete' } as ErrorType;
 };
+
+export const completeRoutineTrakingByIsActiveService = async (idUser: string) => {
+    await routineTrakingModel.updateMany({userId: idUser, state: 'active'}, {state: 'completed'});
+};
+
+

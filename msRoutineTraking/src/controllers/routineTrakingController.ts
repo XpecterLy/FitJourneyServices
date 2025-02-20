@@ -1,6 +1,6 @@
 import { Request, Response } from "express"
 import { ErrorException } from "../utils/errorUtil";
-import { deleteRoutineTrakingByIdService, getAllRoutinesTrakingService, getRoutineTrakingByIdService, InsertRoutineTrakingServise, updateRoutineTrakingByIdService } from "../Services/routine_traking.service";
+import { completeRoutineTrakingByIsActiveService, deleteRoutineTrakingByIdService, getAllRoutinesTrakingService, getRoutineTrakingByIdService, InsertRoutineTrakingServise, updateRoutineTrakingByIdService } from "../Services/routine_traking.service";
 import { routine_trakin_type } from "../types/routine_traking.type";
 import { getCurrentDate } from "../utils/dateUntil";
 import { routineApi } from "../api/routine.api";
@@ -69,6 +69,8 @@ export const updateRoutineTraking = async (req: Request<{}, {}, routine_trakin_t
         // validate if routineTraking exist
         const routineTrakingOld = await getRoutineTrakingByIdService(userId!, id);
 
+        if(data.state == 'active') await completeRoutineTrakingByIsActiveService(req.userId!);
+
         res.status(200).send(await updateRoutineTrakingByIdService(id, routineTrakingOld, data));
     } catch (error) {
         ErrorException(res, error);    
@@ -88,4 +90,3 @@ export const deleteRoutineTraking = async (req: Request<{}, {}, {}, {id: string}
         ErrorException(res, error);    
     }
 }
-

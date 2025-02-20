@@ -59,13 +59,7 @@ export const addSerieRoutineTrakingExercise = async (req: Request<{}, {}, Routin
         const data = req.body;
     const {id} = req.query;
 
-    console.log(data);
-    console.log(id);
-    
     const oldData = await getRoutineTrakingExerciseByIdService(req.userId!, id);
-
-    console.log(oldData);
-    
 
     res.status(200).send(await addSerieRoutineTrakingExerciseService(id, oldData, data));
     } catch (error) {
