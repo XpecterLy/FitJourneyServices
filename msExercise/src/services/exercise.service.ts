@@ -2,13 +2,13 @@ import { exerciseModel } from "../schemas/exercise.schemas"
 import { ErrorType } from "../types/error.type";
 import { exerciseType } from "../types/exercise.type";
 
-export const GetAllExerciseService = async (limit: number, offSet: number, muscleGroupId?: string, trainingStyleId?: string): Promise<exerciseType[]> => {
+export const GetAllExerciseService = async ( muscleGroupId?: string, trainingStyleId?: string): Promise<exerciseType[]> => {
     var filter: any = {};
 
     if( muscleGroupId != undefined ) filter.muscleGroupId = muscleGroupId ;
     if( trainingStyleId != undefined ) filter.trainingStyleId =  trainingStyleId;
 
-    const res = await exerciseModel.find(filter).limit(limit).skip(offSet - 1);
+    const res = await exerciseModel.find(filter);
     return res.map( item => ({
         id: item.id,
         name: item.name,

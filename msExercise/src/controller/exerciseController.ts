@@ -8,17 +8,15 @@ import { exerciseSeeds } from '../seeds/exercisesSeeds';
 import { muscleGroupApi } from '../api/msCategories/muscle-group.api';
 import { trainingStyleApi } from '../api/msCategories/training-styles-api';
 
-export const GetAllExercise = async (req: Request<{}, {}, {}, {limit?: string, offset?: string, muscleGroupId?: string, trainingStyleId: string}>, res: Response) => {
+export const GetAllExercise = async (req: Request<{}, {}, {}, {muscleGroupId?: string, trainingStyleId: string}>, res: Response) => {
     try {
-        const {limit, offset, muscleGroupId, trainingStyleId} = req.query;
+        const {muscleGroupId, trainingStyleId} = req.query;
         
-        const limitValue = limit != undefined ? Number(limit) : 10;
-        const offsetValue = offset != undefined ? Number(offset) : 1;
 
         if(muscleGroupId != undefined) await muscleGroupApi.getMusclegroupIdById(req.token, muscleGroupId);
         if(trainingStyleId != undefined) await trainingStyleApi.getTrainingStyleIdById(req.token, trainingStyleId);
 
-        res.status(200).send(await GetAllExerciseService(limitValue, offsetValue, muscleGroupId, trainingStyleId));
+        res.status(200).send(await GetAllExerciseService(muscleGroupId, trainingStyleId));
     } catch (error) {
         ErrorException(res, error);
     }

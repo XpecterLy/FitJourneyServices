@@ -4,6 +4,7 @@ import { deleteRoutineTrakingByIdService, getAllRoutinesTrakingService, getRouti
 import { routine_trakin_type } from "../types/routine_traking.type";
 import { getCurrentDate } from "../utils/dateUntil";
 import { routineApi } from "../api/routine.api";
+import { routineTrakingExerciseApi } from "../api/routineTrakingExercise";
 
 
 export const getAllRoutinesTraking = async (req: Request<{}, {}, {}, {limit: string, offset: string, routineId: string, state?: string}>, res: Response) => {
@@ -37,12 +38,23 @@ export const insertRoutineTraking = async (req: Request<{}, {}, routine_trakin_t
         const data = req.body;
 
         // validate if routineID exist
-        await routineApi.getRoutineById(data.routineId, req.token!);
+        const routineData = await routineApi.getRoutineById(data.routineId, req.token!);
 
         data.state = data.state != undefined ? data.state : 'create';
         data.dateCreate = getCurrentDate();
 
-        res.status(201).send(await InsertRoutineTrakingServise({...data, userId: userId!}));
+        const resInsert = await InsertRoutineTrakingServise({...data, userId: userId!});
+        
+        await Promise.all(
+            routineData.exercises.map(item => 
+                routineTrakingExerciseApi.insertRoutineTrakingExercise(req.token!, {
+                    exerciseId: item,
+                    routineTrakingId: resInsert.id
+                })
+            )
+        );
+
+        res.status(201).send(resInsert);
     } catch (error) {
         ErrorException(res, error);    
     }
@@ -76,3 +88,4 @@ export const deleteRoutineTraking = async (req: Request<{}, {}, {}, {id: string}
         ErrorException(res, error);    
     }
 }
+
