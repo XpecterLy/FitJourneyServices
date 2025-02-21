@@ -15,9 +15,6 @@ routerUser.get(
 
 routerUser.post(
     '/', 
-    checkAuth,
-    verifyToken,
-    checkRolAuth(['admin', 'user']),
     schemaValidator("/user/data"), 
     RegisterUser
 );
