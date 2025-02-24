@@ -1,7 +1,7 @@
 import { muscleGroupApi } from "../api/msCategories/muscle-group.api";
+import { trainingStyleApi } from "../api/msCategories/training-styles-api";
 import { exerciseType } from "../types/exercise.type";
 
-const hypertrophyTrainingStyleIdVal = '67a0eb9a9ca44f4e841414d1';
 const imageUrlDefault = 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTdzRtTjqaXvOLvoiBWULqxnA-fc15Ros3dzw&s';
 
 export const exerciseSeeds = async (token: string) => {
@@ -9,20 +9,28 @@ export const exerciseSeeds = async (token: string) => {
     const listExercises: exerciseType[] = [];
 
     // Get all muscle group example: (pecho, biceps)
-    const allMuscleGroups = await muscleGroupApi.getAllMusclegroups(token);
+    // const allMuscleGroups = await muscleGroupApi.getAllMusclegroups(token);
+    // const allTrainingStyle = await trainingStyleApi.getallTrainingStyles(token);
 
+    const [allMuscleGroups, allTrainingStyle] = await  Promise.all([
+        muscleGroupApi.getAllMusclegroups(token),
+        trainingStyleApi.getallTrainingStyles(token)
+    ]);
+ 
     // Get id muscleGroup
     const pechoMuscleGroupIdVal = allMuscleGroups.find(group => group.name === 'pecho')?.id;
     const tricepsMuscleGroupIdVal = allMuscleGroups.find(group => group.name === 'tríceps')?.id;
     const bicepsMuscleGroupIdVal = allMuscleGroups.find(group => group.name === 'biceps')?.id;
-    const espaldaMuscleGroupIdVal = allMuscleGroups.find(group => group.name === 'espalda')?.id;
-    
-    console.log("allMuscleGroups");
-    console.log(allMuscleGroups);
-    
+    const backMuscleGroupIdVal = allMuscleGroups.find(group => group.name === 'espalda')?.id;
+    const legMuscleGroupIdVal = allMuscleGroups.find(group => group.name === 'pierna')?.id;
+    const deltoideMuscleGroupIdVal = allMuscleGroups.find(group => group.name === 'deltoide')?.id;
+
+    // get id trainingStyleId
+    const cardioIdVal = allTrainingStyle.find( item => item.name = 'cardio' )?.id;
+    const hypertrophyTrainingStyleIdVal = allTrainingStyle.find( item => item.name = 'Hypertrophy Training')?.id;
 
     // Generate Exercises Seeds
-    if (pechoMuscleGroupIdVal) {
+    if (pechoMuscleGroupIdVal && hypertrophyTrainingStyleIdVal) {
         const data = [
             {
                 name: 'Press de pecho en máquina',
@@ -72,7 +80,7 @@ export const exerciseSeeds = async (token: string) => {
         listExercises.push(...data)
     }
 
-    if(tricepsMuscleGroupIdVal){
+    if(tricepsMuscleGroupIdVal && hypertrophyTrainingStyleIdVal){
         const data = [
             {
                 name: 'Press de copa con mancuerna de pie',
@@ -114,7 +122,7 @@ export const exerciseSeeds = async (token: string) => {
         listExercises.push(...data)
     }
 
-    if (bicepsMuscleGroupIdVal) {
+    if (bicepsMuscleGroupIdVal && hypertrophyTrainingStyleIdVal) {
         const data = [
             {
                 name: 'Curl predicador a una mano con mancuerna',
@@ -163,74 +171,74 @@ export const exerciseSeeds = async (token: string) => {
         listExercises.push(...data)
     }
 
-    if(espaldaMuscleGroupIdVal){
+    if(backMuscleGroupIdVal && hypertrophyTrainingStyleIdVal){
         const data = [
             {
                 name: 'peso muerto rumano',
-                muscleGroupId: espaldaMuscleGroupIdVal,
+                muscleGroupId: backMuscleGroupIdVal,
                 trainingStyleId: hypertrophyTrainingStyleIdVal,
                 imageUrl: imageUrlDefault,
                 details: 'Además de ser uno de los mejores ejercicios para isquiotibiales, el peso muerto rumano (RDL) es una de las variantes de peso muerto más populares en los gimnasios de todo el mundo, entre otras cosas porque es ideal para trabajar la cadena muscular posterior del cuerpo, en especial los isquiotibiales y los glúteos.'
             },
             {
                 name: 'machine 45 Degree Back Extension',
-                muscleGroupId: espaldaMuscleGroupIdVal,
+                muscleGroupId: backMuscleGroupIdVal,
                 trainingStyleId: hypertrophyTrainingStyleIdVal,
                 imageUrl: imageUrlDefault,
                 details: 'El Machine 45 Degree Back Extension es un ejercicio que se realiza en una máquina inclinada a 45 grados, diseñado para fortalecer los músculos de la parte baja de la espalda, glúteos y isquiotibiales. Consiste en inclinar el torso hacia adelante desde las caderas y luego extenderlo hacia arriba hasta alinear la espalda con las piernas, manteniendo una postura controlada.'
             },
             {
                 name: 'supermans',
-                muscleGroupId: espaldaMuscleGroupIdVal,
+                muscleGroupId: backMuscleGroupIdVal,
                 trainingStyleId: hypertrophyTrainingStyleIdVal,
                 imageUrl: imageUrlDefault,
                 details: 'Consiste en acostarse boca abajo con los brazos extendidos hacia adelante y las piernas rectas. Desde esta posición, se levantan simultáneamente los brazos, el pecho y las piernas del suelo, manteniendo la contracción en la parte baja de la espalda durante unos segundos antes de regresar a la posición inicial. Es ideal para fortalecer la zona lumbar, glúteos y músculos estabilizadores.'
             },
             {
                 name: 'Remo sentado en polea con agarre de cuerda',
-                muscleGroupId: espaldaMuscleGroupIdVal,
+                muscleGroupId: backMuscleGroupIdVal,
                 trainingStyleId: hypertrophyTrainingStyleIdVal,
                 imageUrl: imageUrlDefault,
                 details: 'El remo sentado en polea con agarre en cuerda es un ejercicio de entrenamiento de fuerza efectivo para la espalda, los hombros y los brazos. Este movimiento te permite trabajar los músculos de la espalda y los hombros de manera segura y efectiva al utilizar la resistencia controlada de una máquina de polea. '
             },
             {
                 name: 'Remo con mancuernas (agarre prono)',
-                muscleGroupId: espaldaMuscleGroupIdVal,
+                muscleGroupId: backMuscleGroupIdVal,
                 trainingStyleId: hypertrophyTrainingStyleIdVal,
                 imageUrl: imageUrlDefault,
                 details: 'Es un excelente ejercicio para fortalecer la espalda y los brazos. Este ejercicio es perfecto para aquellos que buscan aumentar la masa muscular en la parte superior del cuerpo y mejorar su postura. '
             },
             {
                 name: 'Remo con barra',
-                muscleGroupId: espaldaMuscleGroupIdVal,
+                muscleGroupId: backMuscleGroupIdVal,
                 trainingStyleId: hypertrophyTrainingStyleIdVal,
                 imageUrl: imageUrlDefault,
                 details: 'El remo con barra Z (agarre supino) es un ejercicio de entrenamiento de fuerza altamente efectivo para desarrollar y fortalecer la espalda, los hombros y los brazos. Además, este ejercicio también puede mejorar tu postura, aumentar la fuerza y mejorar la apariencia física.'
             },
             {
                 name: 'Jalón al pecho agarre abierto',
-                muscleGroupId: espaldaMuscleGroupIdVal,
+                muscleGroupId: backMuscleGroupIdVal,
                 trainingStyleId: hypertrophyTrainingStyleIdVal,
                 imageUrl: imageUrlDefault,
                 details: 'No tire de la barra hacia abajo tras su cuello, puesto que hacerlo lo forzará a plegar su cuello fuera de alineación con su columna vertebral, como a poner la articulación del hombro en un rango de movimiento extremo, lo que aumenta el peligro de lesiones.'
             },
             {
                 name: 'Remo en barra T',
-                muscleGroupId: espaldaMuscleGroupIdVal,
+                muscleGroupId: backMuscleGroupIdVal,
                 trainingStyleId: hypertrophyTrainingStyleIdVal,
                 imageUrl: imageUrlDefault,
                 details: 'Tener una rutina de ejercicio te permite conocer los músculos que vas a trabajar en un día. El remo en barra T es uno de los ejercicios más complejos que existen. Por lo que es recomendable solo para aquellas personas que ya tengan un entrenamiento previo.'
             },
             {
                 name: 'Jalón al pecho en polea (agarre semi-abierto)',
-                muscleGroupId: espaldaMuscleGroupIdVal,
+                muscleGroupId: backMuscleGroupIdVal,
                 trainingStyleId: hypertrophyTrainingStyleIdVal,
                 imageUrl: imageUrlDefault,
                 details: 'Durante la polea al pecho, se fortalece en gran medida las diferentes partes de la musculatura correspondientes a la espalda, especialmente la zona dorsal.  También se incluye la musculatura que conforma la escápula y el hombro.'
             },
             {
                 name: 'Pull over ',
-                muscleGroupId: espaldaMuscleGroupIdVal,
+                muscleGroupId: backMuscleGroupIdVal,
                 trainingStyleId: hypertrophyTrainingStyleIdVal,
                 imageUrl: imageUrlDefault,
                 details: 'El pull over es un ejercicio realizado con mucha frecuencia en gimnasios. Como todos los ejercicios que realicemos, se debe conocer la técnica para realizarlo correctamente.'
@@ -239,6 +247,91 @@ export const exerciseSeeds = async (token: string) => {
 
         listExercises.push(...data)
     }
+
+    if(legMuscleGroupIdVal && hypertrophyTrainingStyleIdVal){
+        const data = [
+            {
+                name: 'sentadilla con barra',
+                muscleGroupId: legMuscleGroupIdVal,
+                trainingStyleId: hypertrophyTrainingStyleIdVal,
+                imageUrl: imageUrlDefault,
+                details: 'La sentadilla con barra es un trabajo excepcional para trabajar músculos como los extensores (glúteos y cuádriceps) pero que requiere de una técnica correcta y control de postura al hacerlo, por lo cual especialmente si eres principiante se recomienda hacerlo con un profesional que te guíe y corrija si es necesario.'
+            },
+            {
+                name: 'Curl a una pierna ',
+                muscleGroupId: legMuscleGroupIdVal,
+                trainingStyleId: hypertrophyTrainingStyleIdVal,
+                imageUrl: imageUrlDefault,
+                details: 'El curl femoral tumbado, también conocido como curl de piernas o curl de isquiotibiales, es uno de los mejores ejercicios de aislamiento para los isquiotibiales. De hecho, si quieres aumentar la fuerza y el volumen de tus isquiotibiales, no debería faltar en tu rutina de ejercicios de cadena posterior '
+            },
+            {
+                name: 'sentadilla bulgara',
+                muscleGroupId: legMuscleGroupIdVal,
+                trainingStyleId: hypertrophyTrainingStyleIdVal,
+                imageUrl: imageUrlDefault,
+                details: 'La sentadilla búlgara es un ejercicio de pierna que trabaja principalmente el cuádriceps y los glúteos, promoviendo el fortalecimiento y la hipertrofia de estos músculos.'
+            },
+            {
+                name: 'extensiones de piernas',
+                muscleGroupId: legMuscleGroupIdVal,
+                trainingStyleId: hypertrophyTrainingStyleIdVal,
+                imageUrl: imageUrlDefault,
+                details: 'Las extensiones de piernas son un ejercicio que fortalece los cuádriceps y las rodillas, y que ayuda a definir, estabilizar y aumentar el volumen de las piernas.'
+            },
+            {
+                name: 'peso muerto',
+                muscleGroupId: legMuscleGroupIdVal,
+                trainingStyleId: hypertrophyTrainingStyleIdVal,
+                imageUrl: imageUrlDefault,
+                details: 'El peso muerto es un ejercicio de extensión de rodilla, cadera y espalda a la vez, pero es frecuente observar la extensión de rodillas y después la espalda o al revés. Esto no es correcto pues tiene que ser un movimiento simultáneo y sincronizado. Mantenerse demasiado tiempo en posición de partida.'
+            },
+        ] as exerciseType[];
+
+        listExercises.push(...data)
+    }
+
+    if(deltoideMuscleGroupIdVal && hypertrophyTrainingStyleIdVal){
+        const data = [
+            {
+                name: 'Press militar',
+                muscleGroupId: deltoideMuscleGroupIdVal,
+                trainingStyleId: hypertrophyTrainingStyleIdVal,
+                imageUrl: imageUrlDefault,
+                details: 'El press de hombros, también conocido como press de hombros, press estricto o press militar, es un ejercicio de entrenamiento con pesas para la parte superior del cuerpo'
+            },
+            {
+                name: 'Elevaciones laterales con mancuernas',
+                muscleGroupId: deltoideMuscleGroupIdVal,
+                trainingStyleId: hypertrophyTrainingStyleIdVal,
+                imageUrl: imageUrlDefault,
+                details: 'Las elevaciones laterales de brazos con mancuernas es uno de los ejercicios más frecuentes en todos y cada uno de los gimnasios para trabajar el deltoides lateral. Asimismo, se ven implicados el trapecio y el deltoides anterior, esto es, la parte delantera de los dos músculos.'
+            },
+            {
+                name: 'Elevación frontal con mancuernas',
+                muscleGroupId: deltoideMuscleGroupIdVal,
+                trainingStyleId: hypertrophyTrainingStyleIdVal,
+                imageUrl: imageUrlDefault,
+                details: 'La elevación frontal con mancuernas es un ejercicio ideal para trabajar la parte de los trapecios, a la vez que fortalecemos diversos grupos musculares de los brazos, como la región de los hombros; incluso, podrás moldear la región del pectoral mayor superior. '
+            },
+            {
+                name: 'Press cubano con mancuernas',
+                muscleGroupId: deltoideMuscleGroupIdVal,
+                trainingStyleId: hypertrophyTrainingStyleIdVal,
+                imageUrl: imageUrlDefault,
+                details: 'Sin duda el press cubano es un increíble ejercicio para implementar en nuestra rutina si deseamos trabajar los hombros; pese a ello, no es uno de los más conocidos, aún cuando potencia la musculatura de los hombros de una forma realmente efectiva.'
+            },
+            {
+                name: 'Vuelos posteriores',
+                muscleGroupId: deltoideMuscleGroupIdVal,
+                trainingStyleId: hypertrophyTrainingStyleIdVal,
+                imageUrl: imageUrlDefault,
+                details: 'El vuelo posterior es un ejercicio que puedes hacer con pesas para trabajar los músculos de la parte superior de la espalda. Durante un vuelo posterior, trabajas los músculos romboides en la parte superior de la espalda y la zona de los hombros.'
+            },
+        ] as exerciseType[];
+
+        listExercises.push(...data)
+    }
+
 
     return listExercises;
 }

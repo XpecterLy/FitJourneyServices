@@ -18,14 +18,6 @@ const trainingMuscleGroupData = [
         details: ''
     },
     {
-        name: 'abductors',
-        details: ''
-    },
-    {
-        name: 'adductors',
-        details: ''
-    },
-    {
         name: 'biceps',
         details: ''
     },
@@ -42,14 +34,6 @@ const trainingMuscleGroupData = [
         details: ''
     },
     {
-        name: 'glúteos',
-        details: ''
-    },
-    {
-        name: 'isquiotibiales',
-        details: ''
-    },
-    {
         name: 'espalda',
         details: ''
     },
@@ -58,7 +42,7 @@ const trainingMuscleGroupData = [
         details: ''
     },
     {
-        name: 'cuádriceps',
+        name: 'pierna',
         details: ''
     },
     {
@@ -70,15 +54,7 @@ const trainingMuscleGroupData = [
         details: ''
     },
     {
-        name: 'deltoide anterior',
-        details: ''
-    },
-    {
-        name: 'deltoide medio',
-        details: ''
-    },
-    {
-        name: 'deltoide posterior',
+        name: 'deltoide',
         details: ''
     }
 ] as CategoriesMuscleGroupType[];
