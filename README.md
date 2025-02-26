@@ -18,13 +18,12 @@
     - Node.js v22+  
     - MongoDB
 
-## Init
-    - docker-compose build
-    - docker-compose up
-
 ### Steps 
     git clone https://github.com/XpecterLy/FitJourneyServices.git
-    cd dir
+    cd FitJourneyServices
+    
+    - docker-compose build
+    - docker-compose up
 
     change all names .env.example to .env int microservises and configure all .env files
 
