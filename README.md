@@ -20,7 +20,7 @@
 - MongoDB
 
 ### Steps 
-    git clone https://github.com/XpecterLy/tu-repo.git
+    git clone https://github.com/XpecterLy/FitJourneyServices.git
     cd dir
 
     change all names .env.example to .env int microservises and configure all .env files
@@ -32,7 +32,7 @@
         - execute ``docker-compose build`` in project branch 
         - execute ``docker-compose up``
 
-#### Import
+#### Important
     msUser create default userRoot configure gmail and password in msUser/.env
 
 ## Note
