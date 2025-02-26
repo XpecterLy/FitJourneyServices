@@ -14,10 +14,13 @@
     - **Segurity:** JWT
     - **Validations:** Joi
 
-## Install
 ### Prerequisites  
-- Node.js v22+  
-- MongoDB
+    - Node.js v22+  
+    - MongoDB
+
+## Init
+    - docker-compose build
+    - docker-compose up
 
 ### Steps 
     git clone https://github.com/XpecterLy/FitJourneyServices.git
