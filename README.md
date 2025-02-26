@@ -8,7 +8,7 @@
     - ⚖️Weight management
     - ⏱️Time and progress management
     
-## Tecnologías  
+## Technologies  
     - **Backend:** Node.js (Express)  
     - **data base:** MongoDB  
     - **Segurity:** JWT
